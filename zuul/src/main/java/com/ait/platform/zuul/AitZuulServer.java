@@ -56,7 +56,7 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/index.html", "/home.html", "/", "/login", "/login/**", "/webjars/**", "**/public/**").permitAll()//
+		http.authorizeRequests().antMatchers("/", "/login", "/login/**", "**/public/**").permitAll()//
 				.anyRequest().authenticated()//
 				.and().exceptionHandling()//
 				.and().logout().logoutSuccessUrl("/").permitAll()//

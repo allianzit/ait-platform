@@ -99,6 +99,12 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 		</dependency>
 
+		<!-- async config management -->
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+		</dependency>
+		
 		<!-- service discover de eureka server -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

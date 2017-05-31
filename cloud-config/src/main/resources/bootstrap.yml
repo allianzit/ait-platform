@@ -15,8 +15,8 @@ server.port: 8888
 # default PWD: AITPlatform2017!.
 security.user.password: ${AIT_CLOUD_CONFIG_PASS}
 
----
 #variables overrides 
+---
 spring:
   profiles: dev
   cloud.config.server.overrides:
