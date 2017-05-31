@@ -1,0 +1,43 @@
+spring: 
+  application:
+    name: cloud-config
+  profiles:
+    active: ${AIT_PROFILE}
+#    active: native
+
+  config:
+    name: config
+  cloud:
+    config:
+      enabled: true
+      server.native.searchLocations: ${AIT_NATIVE_CONF_URL}
+encrypt:
+  key: ${AIT_ENCRYPT_KEY}
+logging:
+  file: ${AIT_LOG_PATH}/${spring.application.name}
+  level.root: WARN
+server.port: 8888
+
+# default PWD: AITPlatform2017!.
+security.user.password: ${AIT_CLOUD_CONFIG_PASS}
+
+---
+spring:
+  profiles: dev
+#variables que no pueden ser modificadas por las demas aplicaciones
+  cloud.config.server.overrides:
+    #se evita la creacion o actualizacion del esquema de base de datos desde la aplicacion
+    spring.jpa:
+      #no se valida el esquema
+      hibernate.ddl-auto: none
+  
+---
+spring:
+  profiles: test,prod
+  cloud.config.server.overrides:
+    susi.jpa.generate-export: false
+    spring.jpa:
+      generate-ddl: false
+      show-sql: false
+      format-sql: false
+      hibernate.ddl-auto: validate

@@ -1,0 +1,6 @@
+spring.cloud.config.server:
+  svn:
+    uri: ${AIT_SVN_URI}
+    username: ${AIT_SVN_USERNAME}
+    password: ${AIT_SVN_PASSWORD}
+  default-label: ${AIT_SVN_DEFAULT_LABEL}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<property name="LOG_FILE"
+		value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}" />
+
+	<springProperty source="spring.profiles.active" name="currentProfile"
+		defaultValue="dev" />
+	<jmxConfigurator />
+
+	<!-- default loggers -->
+	<logger name="ROOT" level="WARN" />
+	<logger name="com.ait.platform" level="TRACE" />
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.hibernate" level="WARN" />
+	<logger name="org.apache" level="WARN" />
+	<logger name="com.netflix" level="WARN" />
+	<logger name="sun.rmi" level="WARN" />
+	<logger name="com.sun.jmx.interceptor" level="WARN" />
+	<logger name="javax.management" level="WARN" />
+	
+	<!-- console logger -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender>
+	<root level="TRACE">
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+	<!-- logstash logger. ONLY if not is development profile -->
+	<if condition='"!${currentProfile}".contains("dev")'>
+		<then>
+			<appender name="LOGSTASH"
+				class="net.logstash.logback.appender.LogstashSocketAppender">
+				<host>${AIT_ELASTICSEARCH_HOST:-localhost}</host>
+				<port>5000</port>
+			</appender>
+			<root level="TRACE">
+				<appender-ref ref="LOGSTASH" />
+			</root>
+		</then>
+	</if>
+</configuration>
