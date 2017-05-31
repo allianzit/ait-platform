@@ -1,0 +1,56 @@
+@import '~@swimlane/ngx-datatable/release/themes/material.css';
+@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+@import '~@angular/material/theming';
+
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
+    display: flex;
+    align-items: center;
+}
+
+.table-toolbar {
+	font-size: 1em !important;
+}
+
+
+.table-icon {
+	color:gray;
+}
+
+.ait-dark .ngx-datatable.material {
+    background: rgba(32,32,32,0.3);
+}
+
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$ait-primary: mat-palette($mat-red);
+$ait-accent:  mat-palette($mat-indigo, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$ait-warn:    mat-palette($mat-green);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$ait-theme: mat-light-theme($ait-primary, $ait-accent, $ait-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($ait-theme);
+
+
+.ait-dark {
+  $ait-dark-primary: mat-palette($mat-red, 700, 500, 900);
+  $ait-dark-accent:  mat-palette($mat-indigo, A200, A100, A400);
+  $ait-dark-warn:    mat-palette($mat-green);
+
+  $ait-dark-theme: mat-dark-theme($ait-dark-primary, $ait-dark-accent, $ait-dark-warn);
+
+  @include angular-material-theme($ait-dark-theme);
+}

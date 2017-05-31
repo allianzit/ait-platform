@@ -1,0 +1,30 @@
+{
+	"/api" :{
+		"target": {
+			"host": "localhost",
+			"protocol": "https:",
+			"port": 8081
+		},
+		"pathRewrite": {
+            "^/api/" : "/" 
+        },
+		"changeOrigin": false,
+		"secure" : false
+	},
+
+	"/auth" :{
+		"target": "https://localhost:8443",
+		"changeOrigin": false,
+		"secure": false,
+		"logLevel": "debug"
+	},
+	"/login" :{
+		"target": {
+			"host": "localhost",
+			"protocol": "https:",
+			"port": 8081
+		},
+		"changeOrigin": false,
+		"secure" : false
+	}
+}

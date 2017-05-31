@@ -1,0 +1,4 @@
+<md-nav-list *ngFor="let menuItem of menu| orderBy: 'order'" fxLayout="column" dense>
+  <app-ait-menu-item [item]="menuItem" [level]="0"></app-ait-menu-item>
+  <md-divider></md-divider>
+</md-nav-list>
