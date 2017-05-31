@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration>
+	<!-- Archivo con las definiciones basicas -->
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}" />
+	<!-- perfil actual -->
+	<springProperty name="development" source="spring.profiles.active" defaultValue="dev" />
+	<jmxConfigurator />
+
+	<!-- loggers independientes del perfil -->
+	<logger name="ROOT" level="WARN" />
+	<logger name="co.gov.fgn.susi" level="TRACE" />
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.security" level="WARN" />
+	<logger name="org.hibernate" level="WARN" />
+	<logger name="org.apache" level="WARN" />
+	<logger name="com.netflix" level="WARN" />
+
+	<logger name="sun.rmi" level="WARN" />
+	<logger name="com.sun.jmx.interceptor" level="WARN" />
+	<logger name="io.searchbox" level="WARN" />
+
+	<!-- FIXME se omite la excepcion temporalmente mientras se soluciona el bug en spring boot -->
+	<logger name="org.springframework.data.redis.listener.RedisMessageListenerContainer" level="OFF" />
+
+	<!-- logger a consola -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender>
+	<root level="TRACE">
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+	<!-- si NO es perfil de desarrollo, se envia el log a elastichsearch usando logstash -->
+	<if condition='!"${development}".contains("dev")'>
+		<then>
+			<appender name="logstash" class="net.logstash.logback.appender.LogstashSocketAppender">
+				<host>${SUSI_ELASTICSEARCH_HOST:-localhost}</host>
+				<port>5000</port>
+			</appender>
+			<root level="TRACE">
+				<appender-ref ref="logstash" />
+			</root>
+		</then>
+	</if>
+</configuration>
