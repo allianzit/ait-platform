@@ -1,0 +1,65 @@
+.ait-logo {
+	
+}
+
+.ait-logo img {
+	max-height: 100px;
+	max-width: 100%;
+}
+
+.ait-logo md-card {
+	padding: 0;
+	box-shadow: none;
+	padding: 0 20px;
+}
+
+.ait-toolbar {
+	position: sticky;
+	z-index: 99;
+	top: 0;
+}
+
+.ait-content {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.ait-dark {
+	background: rgb(32, 32, 32);
+}
+
+md-sidenav-container.ait-dark {
+	background: rgb(32, 32, 32);
+}
+
+md-sidenav {
+	background: rgba(248, 248, 248, 0.9);
+}
+
+.mat-sidenav-container {
+	background-color: #fff;
+	min-height: 735px;
+}
+
+.route-content {
+	padding: 4px;
+}
+
+.route-content md-card {
+	margin: 4px;
+}
+
+.ait-footer {
+	font-size: 14px;
+	color: white;
+	background: #424242;
+}
+
+.ait-footer .mat-button[disabled] {
+	color: #aaa;
+}
+
+.ait-footer button img {
+	height: 24px;
+}

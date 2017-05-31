@@ -1,0 +1,2 @@
+#used only when the starts with native profile
+spring.cloud.config.server.native.searchLocations: ${AIT_REPO_URI:file:///C:\ait-platform-config\{profile}}

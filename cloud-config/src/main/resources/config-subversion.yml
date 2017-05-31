@@ -1,6 +1,7 @@
-spring.cloud.config.server:
-  svn:
-    uri: ${AIT_SVN_URI}
-    username: ${AIT_SVN_USERNAME}
-    password: ${AIT_SVN_PASSWORD}
-  default-label: ${AIT_SVN_DEFAULT_LABEL}
+#used only when the starts with subversion profile
+spring.cloud.config.server.svn:
+  uri: ${AIT_REPO_URI:}
+  username: ${AIT_REPO_USERNAME:}
+  password: ${AIT_REPO_PASSWORD:}
+  default-label: ${AIT_REPO_DEFAULT_LABEL:}
+  searchPaths: '{profile}'

@@ -2,17 +2,16 @@
 <!DOCTYPE xml>
 <configuration>
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
-	<property name="LOG_FILE"
-		value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}" />
+	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}" />
 
-	<springProperty source="spring.profiles.active" name="currentProfile"
-		defaultValue="dev" />
+	<springProperty source="spring.profiles.active" name="currentProfile" defaultValue="dev" />
 	<jmxConfigurator />
 
 	<!-- default loggers -->
 	<logger name="ROOT" level="WARN" />
 	<logger name="com.ait.platform" level="TRACE" />
 	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.boot" level="WARN" />
 	<logger name="org.hibernate" level="WARN" />
 	<logger name="org.apache" level="WARN" />
 	<logger name="com.netflix" level="WARN" />

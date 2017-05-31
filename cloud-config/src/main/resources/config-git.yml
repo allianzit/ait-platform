@@ -1,0 +1,7 @@
+#used only when the starts with git profile 
+spring.cloud.config.server.git:
+  uri: ${AIT_REPO_URI:https://github.com/allianzit/ait-platform-config}
+  username: ${AIT_REPO_USERNAME:}
+  password: ${AIT_REPO_PASSWORD:}
+  default-label: ${AIT_REPO_DEFAULT_LABEL:master}
+  searchPaths: '{profile}'
