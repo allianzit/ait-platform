@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: zuul
+  profiles:
+    active: ${AIT_PROFILE}
+  cloud:
+    config:
+      enabled: true
+      uri: ${AIT_CLOUD_CONFIG_URI}
+      username: user
+      password: ${AIT_CLOUD_CONFIG_PASS}
+      fail-fast: true
+encrypt:
+   key: ${AIT_ENCRYPT_KEY}
