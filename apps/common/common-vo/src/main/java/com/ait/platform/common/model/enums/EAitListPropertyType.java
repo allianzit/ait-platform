@@ -25,13 +25,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  *
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum EAitListFeatureType {
-	NONE(0, "Ninguno"), LIST(1, "Lista"), TEXT(2, "Texto"), NUMBER(3, "Número"), DATE(4, "Fecha");
+public enum EAitListPropertyType {
+	NONE(0, "Ninguno"), LIST(1, "Lista"), TEXT(2, "Texto"), NUMBER(3, "Número"), BOOLEAN(4, "Número"), DATE(5, "Fecha");
 
 	private Integer id;
 	private String description;
 
-	EAitListFeatureType(Integer id, String description) {
+	EAitListPropertyType(Integer id, String description) {
 		this.id = id;
 		this.description = description;
 	}
@@ -45,13 +45,13 @@ public enum EAitListFeatureType {
 	}
 
 	@JsonCreator
-	public static EAitListFeatureType fromObject(Map<String, Object> data) {
-		for (EAitListFeatureType e : EAitListFeatureType.values()) {
+	public static EAitListPropertyType fromObject(Map<String, Object> data) {
+		for (EAitListPropertyType e : EAitListPropertyType.values()) {
 			if (e.getId().equals(data.get("id"))) {
 				return e;
 			}
 		}
-		return EAitListFeatureType.NONE;
+		return EAitListPropertyType.NONE;
 	}
 
 }

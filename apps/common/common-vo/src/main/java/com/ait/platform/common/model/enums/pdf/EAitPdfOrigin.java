@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ait.platform.common.repository;
+package com.ait.platform.common.model.enums.pdf;
 
-import com.ait.platform.common.model.entity.AitUser;
-import com.ait.platform.common.model.vo.AitBooleanVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @author AllianzIT
  *
  */
-public interface IAitRepo {
-
-	Boolean updateBoolean(final AitBooleanVO vo, final String schema, final String table, final String field);
-
-	AitUser getLoggedUser(String username);
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum EAitPdfOrigin {
+	STRING, URL, FILE;
 }

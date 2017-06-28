@@ -22,6 +22,7 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ait.platform.common.model.entity.AitUser;
 import com.ait.platform.common.model.vo.AitBooleanVO;
 import com.ait.platform.common.repository.IAitRepo;
 
@@ -39,6 +40,7 @@ public class AitRepo implements IAitRepo {
 	@PersistenceContext
 	private EntityManager entityManager;
 	private final static String UPDATE_ACTIVE_QUERY = "UPDATE %s.%s SET %s = ?0 WHERE ID = ?1";
+	private final static String USER_QUERY = "SELECT u FROM AitUser u WHERE u.username = ?0";
 
 	@Override
 	@Transactional
@@ -48,6 +50,13 @@ public class AitRepo implements IAitRepo {
 		query.setParameter(0, vo.isData() ? 1 : 0);
 		query.setParameter(1, vo.getId());
 		return query.executeUpdate() == 1;
+	}
+
+	@Override
+	public AitUser getLoggedUser(String username) {
+		final Query query = getEntityManager().createQuery(USER_QUERY, AitUser.class);
+		query.setParameter(0, username);
+		return (AitUser) query.getSingleResult();
 	}
 
 }

@@ -17,15 +17,10 @@ package com.ait.platform.common.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
-import org.apache.pdfbox.io.MemoryUsageSetting;
-import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.logger.AitLogger;
 
 /**
@@ -47,26 +42,9 @@ public class AitFileUtils {
 			fileInputStream.read(bFile);
 			fileInputStream.close();
 		} catch (final Exception e) {
-			AitLogger.error(logger,"Error convirtiendo archivo de arreglo a bytes " + e);
+			AitLogger.error(logger, "Error convirtiendo archivo de arreglo a bytes " + e);
 			throw new RuntimeException(e);
 		}
 		return bFile;
-	}
-
-	public static void mergePDF(String destinationPath, File... attachmentFiles) throws FileNotFoundException {
-		try {
-
-			final PDFMergerUtility resultFile = new PDFMergerUtility();
-			for (final File attachmentFile : attachmentFiles) {
-				resultFile.addSource(attachmentFile);
-			}
-			resultFile.setDestinationFileName(destinationPath);
-
-			resultFile.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly());
-		} catch (IOException | RuntimeException e) {
-			AitLogger.error(logger,"Error al mezclar los pdfs", "Se ha generado un error en el momento de generar el pdf de la Solicitud", e);
-			throw new AitException(e, "Error al mezclar los pdfs", "Se ha generado un error en el momento de generar el pdf de la Solicitud");
-		}
-
 	}
 }

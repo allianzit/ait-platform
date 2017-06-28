@@ -16,21 +16,21 @@
 package com.ait.platform.common.model.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
@@ -53,7 +53,7 @@ import lombok.ToString;
  *
  */
 @Entity
-@Table(name = IAitEntity.LIST_OPT_VAL_FEATURE, schema = IAitEntity.SCHEMA)
+@Table(name = IAitEntity.LIST_OPTION, schema = IAitEntity.SCHEMA)
 @NoArgsConstructor(onConstructor = @__({ @JsonCreator }))
 @AllArgsConstructor
 @ToString(includeFieldNames = true)
@@ -62,48 +62,45 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@AuditTable(value = IAitEntity.LIST_OPT_VAL_FEATURE + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
-public class AitListOptValFeature implements Serializable {
+@AuditTable(value = IAitEntity.LIST_OPTION + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
+public class AitListOption implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 9074818813484157391L;
+	private static final long serialVersionUID = -2607990821865111807L;
 
 	@Id
 	@Basic(optional = false)
 	@Column(name = "ID")
-	@SequenceGenerator(allocationSize = 1, name = IAitEntity.SEQ + IAitEntity.LIST_OPT_VAL_FEATURE, sequenceName = IAitEntity.SEQ
-			+ IAitEntity.LIST_OPT_VAL_FEATURE, initialValue = IAitEntity.FIRST_SEQ_VALUE, schema = IAitEntity.SCHEMA, catalog = IAitEntity.SCHEMA)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = IAitEntity.SEQ + IAitEntity.LIST_OPT_VAL_FEATURE)
+	@SequenceGenerator(allocationSize = 1, name = IAitEntity.SEQ + IAitEntity.LIST_OPTION, sequenceName = IAitEntity.SEQ + IAitEntity.LIST_OPTION, initialValue = IAitEntity.FIRST_SEQ_VALUE, schema = IAitEntity.SCHEMA, catalog = IAitEntity.SCHEMA)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = IAitEntity.SEQ + IAitEntity.LIST_OPTION)
 	private Integer id;
 
 	@Column(name = "IS_ENABLED", nullable = false, columnDefinition = "NUMBER (1) DEFAULT(1)")
 	private Boolean enabled = Boolean.TRUE;
 
-	@Column(name = "TEXT_VALUE", nullable = true, columnDefinition = "VARCHAR2(512)")
-	private String textValue;
+	@Column(name = "NAME", nullable = false, columnDefinition = "VARCHAR2(600)")
+	private String name;
 
-	@Column(name = "NUMBER_VALUE", nullable = true)
-	private Number numberValue;
+	@Column(name = "INTERNAL_CODE", nullable = false, columnDefinition = "VARCHAR2(50)")
+	private String internalCode;
 
-	@Column(name = "DATE_VALUE", nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateValue;
+	@Column(name = "EXTERNAL_CODE", nullable = false, columnDefinition = "VARCHAR2(50)")
+	private String externalCode;
 
-	@JoinColumn(name = "LIST_VALUE_ID", nullable = true, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_FEAT_LIST_VALUE"))
+	@JoinColumn(name = "LIST_TYPE_ID", nullable = false, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_LIST_TYPE"))
 	@ManyToOne
-	private AitListOptionValue listValue;
+	private AitListType listType;
 
-	@JoinColumn(name = "FEATURE_TYPE_ID", nullable = false, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_FEAT_TYPE"))
+	@JoinColumn(name = "PARENT_ID", nullable = true, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_PARENT_OPT"))
 	@ManyToOne
-	private AitListFeatureType featureType;
+	private AitListOption parent;
 
-	@JoinColumn(name = "OPTION_VALUE_ID", nullable = false, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_FEAT_OPT_VAL"))
-	@ManyToOne
-	private AitListOptionValue optionValue;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "option")
+	private Set<AitListOptionProperty> properties;
 
-	public AitListOptValFeature(final Integer id) {
+	public AitListOption(final Integer id) {
 		this.id = id;
 	}
 

@@ -16,11 +16,15 @@
 
 import java.util.ArrayList;
 
+import javax.servlet.MultipartConfigElement;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +40,8 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 /**
  * @author AllianzIT
@@ -84,6 +90,26 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 			}
 			return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
 		};
+	}
+
+	@Bean
+	public PrincipalExtractor principalExtractor(OAuth2RestOperations template) {
+		return map -> {
+			return map.get("preferred_username");
+		};
+	}
+
+	@Bean(name = "commonsMultipartResolver")
+	public MultipartResolver multipartResolver() {
+		return new StandardServletMultipartResolver();
+	}
+
+	@Bean
+	public MultipartConfigElement multipartConfigElement() {
+		MultipartConfigFactory factory = new MultipartConfigFactory();
+		factory.setMaxFileSize("10MB");
+		factory.setMaxRequestSize("10MB");
+		return factory.createMultipartConfig();
 	}
 
 }

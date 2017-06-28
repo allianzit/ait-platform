@@ -16,9 +16,7 @@
 package com.ait.platform.common.model.vo;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,19 +36,27 @@ import lombok.ToString;
 @NoArgsConstructor(onConstructor = @__({ @JsonCreator }))
 @AllArgsConstructor
 @ToString(includeFieldNames = true)
-@EqualsAndHashCode(of = { "id" })
+@EqualsAndHashCode(of = { "id" }, callSuper = false)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class AitUserVO implements Serializable {
+public class AitListOptionPropertyVO implements Serializable {
 
-	private static final long serialVersionUID = 5436508884567227048L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9074818813484157391L;
+
 	private Integer id;
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private Set<String> roles = new TreeSet<>();
-	private HashSet<AitMenuVO> menu = new HashSet<>();
+	private Boolean enabled = Boolean.TRUE;
+	private String textValue;
+	private Integer numberValue;
+	private Date dateValue;
+	private AitListOptionVO option;
+	private AitListPropertyTypeVO propertyType;
+
+	public AitListOptionPropertyVO(final Integer id) {
+		this.id = id;
+	}
 
 }

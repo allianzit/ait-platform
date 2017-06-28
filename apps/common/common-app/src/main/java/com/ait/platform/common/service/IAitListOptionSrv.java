@@ -12,19 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package com.ait.platform.common.repository;
+ */package com.ait.platform.common.service;
 
-import com.ait.platform.common.model.entity.AitUser;
-import com.ait.platform.common.model.vo.AitBooleanVO;
+import java.util.List;
+
+import com.ait.platform.common.model.vo.AitListOptionVO;
 
 /**
  * @author AllianzIT
  *
  */
-public interface IAitRepo {
+public interface IAitListOptionSrv {
 
-	Boolean updateBoolean(final AitBooleanVO vo, final String schema, final String table, final String field);
+	List<AitListOptionVO> findByListTypeAndFilter(final String listType, String filter);
 
-	AitUser getLoggedUser(String username);
 }

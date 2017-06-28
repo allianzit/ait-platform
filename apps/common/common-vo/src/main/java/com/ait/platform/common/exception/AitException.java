@@ -55,8 +55,8 @@ public class AitException extends RuntimeException {
 	public String getCompleteMessage() {
 		StringBuffer msg = new StringBuffer(message);
 		for (String error : errors) {
-			msg.append(error);
 			msg.append("\n");
+			msg.append(error);
 		}
 		return msg.toString();
 	}

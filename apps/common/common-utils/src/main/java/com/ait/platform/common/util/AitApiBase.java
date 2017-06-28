@@ -24,6 +24,7 @@ import com.ait.platform.common.model.vo.AitMessageVO;
 
 /**
  * Base class to be used by classes that generates http responses
+ * 
  * @author AllianzIT
  *
  */

@@ -16,10 +16,8 @@
 package com.ait.platform.common.model.vo;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 
+import com.ait.platform.common.model.enums.EAitListPropertyType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -38,19 +36,31 @@ import lombok.ToString;
 @NoArgsConstructor(onConstructor = @__({ @JsonCreator }))
 @AllArgsConstructor
 @ToString(includeFieldNames = true)
-@EqualsAndHashCode(of = { "id" })
+@EqualsAndHashCode(of = { "id" }, callSuper = false)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class AitUserVO implements Serializable {
+public class AitListPropertyTypeVO implements Serializable {
 
-	private static final long serialVersionUID = 5436508884567227048L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -641731589178723878L;
+
 	private Integer id;
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private Set<String> roles = new TreeSet<>();
-	private HashSet<AitMenuVO> menu = new HashSet<>();
+	private Boolean enabled = Boolean.TRUE;
+	private Boolean allowMultiple = Boolean.FALSE;
+	private Boolean required = Boolean.TRUE;
+	private String code;
+	private String name;
+	private String icon;
+	private EAitListPropertyType type;
+	private String mask;
+	private AitListTypeVO listType;
+	private AitListTypeVO validOptions;
+
+	public AitListPropertyTypeVO(final Integer id) {
+		this.id = id;
+	}
 
 }

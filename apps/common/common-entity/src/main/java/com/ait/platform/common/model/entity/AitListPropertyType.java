@@ -20,6 +20,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,6 +35,7 @@ import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
+import com.ait.platform.common.model.enums.EAitListPropertyType;
 import com.ait.platform.common.util.IAitEntity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -50,7 +53,7 @@ import lombok.ToString;
  *
  */
 @Entity
-@Table(name = IAitEntity.LIST_OPTION_DEF, schema = IAitEntity.SCHEMA)
+@Table(name = IAitEntity.LIST_PROP_TYPE, schema = IAitEntity.SCHEMA)
 @NoArgsConstructor(onConstructor = @__({ @JsonCreator }))
 @AllArgsConstructor
 @ToString(includeFieldNames = true)
@@ -59,32 +62,56 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@AuditTable(value = IAitEntity.LIST_OPTION_DEF + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
-public class AitListOptionDef implements Serializable {
+@AuditTable(value = IAitEntity.LIST_PROP_TYPE + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
+public class AitListPropertyType implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2607990821865111807L;
+	private static final long serialVersionUID = -641731589178723878L;
 
 	@Id
 	@Basic(optional = false)
 	@Column(name = "ID")
-	@SequenceGenerator(allocationSize = 1, name = IAitEntity.SEQ + IAitEntity.LIST_OPTION_DEF, sequenceName = IAitEntity.SEQ + IAitEntity.LIST_OPTION_DEF, initialValue = IAitEntity.FIRST_SEQ_VALUE, schema = IAitEntity.SCHEMA, catalog = IAitEntity.SCHEMA)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = IAitEntity.SEQ + IAitEntity.LIST_OPTION_DEF)
+	@SequenceGenerator(allocationSize = 1, name = IAitEntity.SEQ + IAitEntity.LIST_PROP_TYPE, sequenceName = IAitEntity.SEQ
+			+ IAitEntity.LIST_PROP_TYPE, initialValue = IAitEntity.FIRST_SEQ_VALUE, schema = IAitEntity.SCHEMA, catalog = IAitEntity.SCHEMA)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = IAitEntity.SEQ + IAitEntity.LIST_PROP_TYPE)
 	private Integer id;
 
 	@Column(name = "IS_ENABLED", nullable = false, columnDefinition = "NUMBER (1) DEFAULT(1)")
 	private Boolean enabled = Boolean.TRUE;
 
-	@Column(name = "NAME", columnDefinition = "VARCHAR2(256)")
+	@Column(name = "ALLOW_MULTIPLE", nullable = false, columnDefinition = "NUMBER (1) DEFAULT(0)")
+	private Boolean allowMultiple = Boolean.FALSE;
+
+	@Column(name = "IS_REQUIRED", nullable = false, columnDefinition = "NUMBER (1) DEFAULT(1)")
+	private Boolean required = Boolean.TRUE;
+	
+	@Column(name = "CODE", columnDefinition = "VARCHAR2(40)")
+	private String code;
+
+	@Column(name = "NAME", columnDefinition = "VARCHAR2(128)")
 	private String name;
 
-	@JoinColumn(name = "LIST_TYPE_ID", nullable = true, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_LIST_TYPE"))
+	@Column(name = "ICON", nullable = true)
+	private String icon;
+
+	@Column(name = "PROPERTY_TYPE", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private EAitListPropertyType type;
+
+	@Column(name = "MASK", nullable = true, columnDefinition = "VARCHAR2(100)")
+	private String mask;
+
+	@JoinColumn(name = "LIST_TYPE_ID", nullable = false, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_FEAT_LIST_TYPE"))
 	@ManyToOne
 	private AitListType listType;
 
-	public AitListOptionDef(final Integer id) {
+	@JoinColumn(name = "VALID_OPTS_ID", nullable = true, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_FEAT_VALID_OPTS"))
+	@ManyToOne
+	private AitListType validOptions;
+
+	public AitListPropertyType(final Integer id) {
 		this.id = id;
 	}
 

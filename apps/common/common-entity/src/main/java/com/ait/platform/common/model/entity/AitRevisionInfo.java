@@ -45,7 +45,7 @@ import lombok.Setter;
  *
  */
 @Entity
-@Table(name = IAitEntity.REVISION_INFO)
+@Table(name = IAitEntity.REVISION_INFO, schema = IAitEntity.SCHEMA)
 @RevisionEntity(AitRevisionListener.class)
 @Data
 public class AitRevisionInfo implements Serializable {

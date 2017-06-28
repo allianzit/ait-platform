@@ -42,15 +42,14 @@ public interface IAitEntity {
 	public final static String SEQ = SCHEMA + ".SQ_";
 
 	// Tables
-	public final static String REVISION_INFO = "REVISION_INFO";
+	public final static String REVISION_INFO = PREFIX + "REVISION_INFO";
 	public final static String USER = PREFIX + "USER";
 	public final static String PARAM = PREFIX + "PARAM";
 	public final static String MENU = PREFIX + "MENU";
 	public final static String LIST_TYPE = PREFIX + "LIST_TYPE";
-	public final static String LIST_FEATURE_TYPE = PREFIX + "LIST_FEAT_TYPE";
-	public final static String LIST_OPTION_DEF = PREFIX + "LIST_OPT_DEF";
-	public final static String LIST_OPTION_VALUE = PREFIX + "LIST_OPT_VAL";
-	public final static String LIST_OPT_VAL_FEATURE = PREFIX + "LIST_OPT_VAL_FEA";
+	public final static String LIST_PROP_TYPE = PREFIX + "LIST_PROP_TYPE";
+	public final static String LIST_OPTION = PREFIX + "LIST_OPTION";
+	public final static String LIST_OPTION_PROP = PREFIX + "LIST_OPTION_PROP";
 	public final static String TASK = PREFIX + "TASK";
 	public final static String TASK_PROFILE_PIVOT = TASK + "_PROFILE_PIVOT";
 	public final static String TASK_EMAIL_PIVOT = TASK + "_EMAIL_PIVOT";

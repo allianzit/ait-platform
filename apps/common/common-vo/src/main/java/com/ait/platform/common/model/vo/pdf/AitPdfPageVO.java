@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ait.platform.common.model.vo;
+package com.ait.platform.common.model.vo.pdf;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 
+import com.ait.platform.common.model.enums.pdf.EAitPdfOrigin;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -38,19 +35,30 @@ import lombok.ToString;
 @NoArgsConstructor(onConstructor = @__({ @JsonCreator }))
 @AllArgsConstructor
 @ToString(includeFieldNames = true)
-@EqualsAndHashCode(of = { "id" })
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class AitUserVO implements Serializable {
+public class AitPdfPageVO implements Serializable {
 
-	private static final long serialVersionUID = 5436508884567227048L;
-	private Integer id;
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private Set<String> roles = new TreeSet<>();
-	private HashSet<AitMenuVO> menu = new HashSet<>();
+	private static final long serialVersionUID = 7182235863687838588L;
+
+	private EAitPdfOrigin origin;
+	private String content;
+	private boolean customHeader = false;
+	private boolean customFooter = false;
+	private AitPdfValueVO values = null;
+
+	public AitPdfPageVO(EAitPdfOrigin origin, String content) {
+		super();
+		this.origin = origin;
+		this.content = content;
+	}
+
+	public AitPdfPageVO(EAitPdfOrigin origin, String content, AitPdfValueVO values) {
+		super();
+		this.origin = origin;
+		this.content = content;
+		this.values = values;
+	}
 
 }

@@ -61,7 +61,7 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 
 		Map<String, String> details = (Map<String, String>) principal.getDetails();
 
-		String username = details.get("preferred_username");
+		String username = getUsername();
 
 		AitUser user = userRepo.getByUsername(username);
 		// se crea el usuario si no existe
@@ -82,6 +82,9 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 			// se crea el menu del usuario
 			Collection<GrantedAuthority> authorities = principal.getAuthorities();
 			if (!authorities.isEmpty()) {
+				for (GrantedAuthority auth : authorities) {
+					userVO.getRoles().add(auth.getAuthority());
+				}
 				logger.info("Loading user menu for authorities: {}", authorities);
 				List<AitMenu> menuList = menuRepo.findRootOpts();
 				for (AitMenu menuOpc : menuList) {
@@ -96,7 +99,6 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return userVO;
 	}
 

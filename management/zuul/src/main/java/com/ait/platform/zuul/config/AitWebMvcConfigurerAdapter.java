@@ -15,6 +15,10 @@
  */
 package com.ait.platform.zuul.config;
 
+import javax.servlet.MultipartConfigElement;
+
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -50,5 +54,4 @@ public class AitWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 	public static class DiscoveryAsyncTimeoutException extends Exception {
 		private static final long serialVersionUID = 6012181667166551043L;
 	}
-
 }

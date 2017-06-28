@@ -44,6 +44,8 @@
 		<maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
 		<slf4j-api.version>1.7.21</slf4j-api.version>
 		<logstash.version>4.9</logstash.version>
+		<keycloak.admin.version>3.1.0.Final</keycloak.admin.version>
+		<resteasy.version>3.0.14.Final</resteasy.version>
 		<start-class>com.ait.platform.common.AitCommonApplication</start-class>
 	</properties>
 
@@ -110,18 +112,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.security</groupId> -->
-<!-- 			<artifactId>spring-security-jwt</artifactId> -->
-<!-- 		</dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.session</groupId> -->
-		<!-- <artifactId>spring-session</artifactId> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.netflix.netflix-commons</groupId> -->
-		<!-- <artifactId>netflix-commons-util</artifactId> -->
-		<!-- </dependency> -->
 
 		<!-- manejo de datos y persistencia -->
 		<dependency>
@@ -146,11 +136,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>net.wimpi</groupId> -->
-		<!-- <artifactId>telnetd-x</artifactId> -->
-		<!-- <version>2.1.1</version> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-feign</artifactId>
@@ -182,6 +167,32 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.keycloak</groupId> -->
+		<!-- <artifactId>keycloak-admin-client</artifactId> -->
+		<!-- <version>${keycloak.admin.version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.jboss.resteasy</groupId> -->
+		<!-- <artifactId>resteasy-client</artifactId> -->
+		<!-- <version>${resteasy.version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.jboss.resteasy</groupId> -->
+		<!-- <artifactId>resteasy-jackson2-provider</artifactId> -->
+		<!-- <version>${resteasy.version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.jboss.resteasy</groupId> -->
+		<!-- <artifactId>resteasy-multipart-provider</artifactId> -->
+		<!-- <version>${resteasy.version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.jhades</groupId> -->
+		<!-- <artifactId>jhades</artifactId> -->
+		<!-- <version>1.0.4</version> -->
+		<!-- </dependency> -->
 	</dependencies>
 
 	<build>
@@ -242,6 +253,7 @@
 						<version>1.10.3.RELEASE</version>
 					</dependency>
 				</dependencies>
+
 			</plugin>
 		</plugins>
 	</build>
