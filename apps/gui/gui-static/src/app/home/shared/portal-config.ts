@@ -1,7 +1,7 @@
 
 export class PortalConfig {
-  constructor(
-    public keyCloakUrl: string,
-    public redirectUri: string,
-  ) { }
+    public keyCloakUrl: string;
+    public redirectUri: string;
+
+    constructor() { }
 }

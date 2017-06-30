@@ -1,4 +1,6 @@
 export const environment = {
+    idleSession: 60,
+    timeoutSession: 1200,
     production: true,
     logoLeft: true,
     logoRight: true,

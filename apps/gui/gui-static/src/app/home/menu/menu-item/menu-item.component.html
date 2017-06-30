@@ -10,7 +10,7 @@
 	</md-list-item>
 	<div *ngIf="hasChildren(item) && item.expanded">
 		<div class="menu-item" *ngFor="let child of item.children | orderBy: 'order'">
-		    <app-ait-menu-item [item]="child" [level]="level + 1"></app-ait-menu-item>
+		    <app-ait-menu-item [item]="child" [level]="level + 1" [sideNav]="sideNav"></app-ait-menu-item>
 		</div>
 	</div>
 </div>

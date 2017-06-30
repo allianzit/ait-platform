@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ObservableMedia } from '@angular/flex-layout';
+import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
+import { Keepalive } from '@ng-idle/keepalive';
+import { MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 
 import 'rxjs/operator/map';
 import 'rxjs/operator/filter';
@@ -10,7 +13,7 @@ import 'rxjs/operator/catch';
 import { environment } from '../../environments/environment';
 import { HomeService } from './shared/home.service';
 import { PortalConfig } from './shared/portal-config';
-import { UserInfo } from './shared/user-info';
+import { AitUser } from '../ait/model/ait-user';
 
 @Component( {
     selector: 'app-home',
@@ -19,13 +22,31 @@ import { UserInfo } from './shared/user-info';
 } )
 export class HomeComponent implements OnInit {
 
-    public environment = environment;
     public mediaState = '';
-    private portalConfig: PortalConfig;
+    public environment = environment;
+    public user: AitUser = new AitUser();
 
-    public user: UserInfo = new UserInfo( 0, null, null, null, null, [] );
+    timeoutMsg: MdSnackBarRef<SimpleSnackBar>;
 
-    constructor( private http: Http, private homeService: HomeService, public media: ObservableMedia ) { }
+    constructor( private http: Http, private homeService: HomeService, public media: ObservableMedia, private idle: Idle, private keepalive: Keepalive, private snackBar: MdSnackBar ) {
+        idle.setIdle( environment.idleSession );//tiempo maximo de inactividad
+        idle.setTimeout( environment.timeoutSession );//tiempo durante el cual se muestra el mensaje
+        keepalive.interval( 15 );
+
+        // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
+        idle.setInterrupts( DEFAULT_INTERRUPTSOURCES );
+
+        idle.onTimeout.subscribe(() => this.logout() );
+        idle.onTimeoutWarning.subscribe(( countdown ) => {
+            if ( !this.timeoutMsg ) {
+                this.timeoutMsg = snackBar.open( 'Tu sesión se cerrará automáticamente en ' + countdown + ' segundos por inactividad!', null, {
+                    duration: 5000,
+                } );
+            } else {
+                this.timeoutMsg.instance.message = 'Tu sesión se cerrará automáticamente en ' + countdown + ' segundos por inactividad!';
+            }
+        } );
+    }
 
     ngOnInit(): void {
         this.media.asObservable()
@@ -36,14 +57,9 @@ export class HomeComponent implements OnInit {
         this.homeService.getUserInfo()
             .subscribe(( userInfo ) => {
                 this.user = userInfo;
-                this.homeService.getPortalConfig()
-                    .subscribe(( config ) => {
-                        this.portalConfig = config;
-                    },
-                    error => console.log( error ) );
+                this.idle.watch();
             },
             error => console.log( error ) );
-
     }
 
     getSidenavMode() {
@@ -51,10 +67,11 @@ export class HomeComponent implements OnInit {
     }
 
     logout() {
-        this.homeService.appLogout( this.portalConfig )
+        this.homeService.appLogout()
             .subscribe(( ok ) => {
                 if ( ok ) {
-                    this.user = new UserInfo( 0, null, null, null, null, [] );
+                    this.user = new AitUser();
+                    this.idle.stop();
                 }
             },
             error => console.log( error ) );

@@ -5,33 +5,69 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { UserInfo } from './user-info';
+import { AitUser } from '../../ait/model/ait-user';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class HomeService {
     public isDarkTheme = false;
-    
+
     constructor( private http: Http ) { }
 
-    public getUserInfo(): Observable<UserInfo> {
-        return this.http.get( environment.apiPath + 'common/secure/me' )
-            .map( this.extractData )
+    public getStoredItem( itemName ): any {
+        let item = localStorage.getItem( itemName );
+        if ( item ) {
+            try {
+                return JSON.parse( item );
+            } catch ( e ) {
+                localStorage.removeItem( itemName );
+            }
+        }
+        return null;
+    }
+
+    private getItem( itemName ): Observable<any> {
+        let item = localStorage.getItem( itemName );
+        if ( item ) {
+            try {
+                return Observable.of( JSON.parse( item ) );
+            } catch ( e ) {
+                localStorage.removeItem( itemName );
+            }
+        }
+        return null;
+    }
+    public getUserInfo(): Observable<AitUser> {
+        let userInfo = this.getItem( 'userInfo' );
+        if ( userInfo ) {
+            return userInfo;
+        }
+        return this.http.get( `${environment.apiPath}common/secure/me` )
+            .map(( res: Response ) => {
+                const userInfo = this.extractData( res );
+                localStorage.setItem( 'userInfo', JSON.stringify( userInfo ) );
+                this.getPortalConfig();
+                return userInfo;
+            } )
             .catch( this.handleError );
     }
 
-    public getPortalConfig(): Observable<PortalConfig> {
-        return this.http.get( environment.apiPath + 'common/secure/portalConfig' )
-            .map( this.extractData ).catch( this.handleError );
+    public getPortalConfig() {
+        this.http.get( `${environment.apiPath}common/secure/portalConfig` )
+            .map(( res: Response ) => {
+                const portalConfig = this.extractData( res );
+                localStorage.setItem( 'portalConfig', JSON.stringify( portalConfig ) );
+            } ).catch( this.handleError );
     }
 
-    public appLogout( portalConfig: PortalConfig ): Observable<boolean> {
-        return this.http.post( environment.apiPath + 'logout', {} )
+    public appLogout(): Observable<boolean> {
+        return this.http.post( `${environment.apiPath}logout`, {} )
             .map(( resp ) => {
                 if ( resp.status === 200 ) {
-                    console.log( portalConfig );
-                    const url: string = portalConfig.keyCloakUrl + 'logout' + '?redirect_uri=' + portalConfig.redirectUri;
+                    const portalConfig = this.getStoredItem( 'portalConfig' );
+                    const url: string = `${portalConfig.keyCloakUrl}logout?redirect_uri=${portalConfig.redirectUri}`;
                     window.location.href = url;
+                    localStorage.removeItem( 'userInfo' );
                     return true;
                 }
                 return false;

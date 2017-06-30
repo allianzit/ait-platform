@@ -4,6 +4,8 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
+    idleSession: 60,
+    timeoutSession: 1200,
     production: false,
     logoLeft: true,
     logoRight: true,

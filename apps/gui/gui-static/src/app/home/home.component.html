@@ -1,6 +1,6 @@
 <div class="ait-content"> 
 	<div class="ait-logo" fxHide="true" fxShow.gt-sm="true" fxLayout="row" fxLayoutAlign="center">
-		<md-card fxFlex>
+		<md-card fxLayout="row" fxFlex>
 			<img alt="logo" *ngIf="environment.logoLeft" src="assets/img/logo_left.png">	
 			<div fxFlex><h1 fxLayoutAlign="center" *ngIf="environment.titlePage">{{environment.systemTitle}}</h1></div>
 			<img alt="logo" *ngIf="environment.logoRight" src="assets/img/logo_right.png">
@@ -13,13 +13,12 @@
 	    <span>{{environment.systemTitle}}</span>
 	    <span fxFlex></span>
 		    <button md-button (click)="toggleDarkTheme()">Contrast</button>
-		<a md-icon-button routerLink="/demo" routerLinkActive="active">Demo</a>
     	<a md-icon-button href="./login" *ngIf="!user.username"><md-icon>security</md-icon></a>
     	<button md-icon-button (click)="logout()" *ngIf="user.username"><md-icon>exit_to_app</md-icon></button>
   	</md-toolbar>
 	<md-sidenav-container [class.ait-dark]="isDarkTheme()" >
 		<md-sidenav #sidenav mode="{{getSidenavMode()}}" class="app-sidenav">
-	    	<app-ait-menu-list [menu]="user.menu" fxLayout="column"></app-ait-menu-list>
+	    	<app-ait-menu-list [menu]="user.menu" fxLayout="column" [sideNav]="sidenav"></app-ait-menu-list>
 	  	</md-sidenav>
 		<div class="route-content">
 			<md-card color="primary">
@@ -39,7 +38,3 @@
 		</div>
     </div>
 </div>
-
-<!-- <span class="app-action" > -->
-<!--   <button md-fab><md-icon>check circle</md-icon></button> -->
-<!-- </span> -->

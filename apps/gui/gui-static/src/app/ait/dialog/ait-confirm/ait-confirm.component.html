@@ -1,0 +1,6 @@
+<md-toolbar md-dialog-title color="primary">{{dialogConfig.title}}</md-toolbar>
+<md-dialog-content>{{dialogConfig.message}}</md-dialog-content>
+<md-dialog-actions fxLayout="row" fxLayoutAlign="end">
+  <button md-button md-dialog-close color="warn">Cancelar</button>
+  <button md-button [md-dialog-close]="true" color="primary">Aceptar</button>
+</md-dialog-actions>

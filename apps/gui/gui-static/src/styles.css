@@ -7,10 +7,80 @@ body {
 	flex-direction: row;
 	margin: 0;
 	height: 100%;
-	font-size: .8em;
+	font-size: 0.9em;
 	overflow-x: hidden;
 }
 
 app-home {
 	width: 100%;
+}
+
+.route-content {
+	
+}
+
+.route-content .mat-card {
+	padding: 10px;
+}
+
+.v-divider {
+	border-left: solid #fff 0.5px;
+	padding-left: 4px;
+	margin-left: 6px;
+}
+
+.ait-buttons {
+	padding: 8px 0;
+}
+
+.ait-buttons .mat-button, .ait-buttons .mat-fab, .ait-buttons .mat-icon-button,
+	.ait-buttons .mat-mini-fab, .ait-buttons .mat-raised-button {
+	margin-left: 8px;
+}
+
+.ait-table {
+	border: solid #ccc 0.5px;
+}
+
+.ait-file-label {
+	display: block;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+}
+
+.ait-file-input {
+	opacity: 0;
+	position: absolute;
+	z-index: -1;
+}
+
+.currency {
+	text-align: right !important;
+}
+
+.currency:before {
+	content: '$ ';
+}
+
+.tricky-select {
+	width: 100%;
+}
+
+.tricky-select .mat-input-underline {
+	display: none;
+}
+
+.breadcrumb {
+	margin: 0;
+}
+
+li.breadcrumb.list {
+	margin: 0;
+	display: inline-block;
+}
+
+li.breadcrumb.list a {
+	text-decoration: none;
+	cursor: pointer;
 }
