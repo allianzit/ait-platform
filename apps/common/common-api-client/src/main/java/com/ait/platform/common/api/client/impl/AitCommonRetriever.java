@@ -51,7 +51,7 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	}
 
 	@Override
-	@HystrixCommand(fallbackMethod = "errorOnAddEmailToQueue")
+	@HystrixCommand(fallbackMethod = "errorOnAddEmailToQueue", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
 	public Boolean addEmailToQueue(final AitTaskEmailPivotVO email) {
 		AitLogger.debug(logger, "Trying to add email to the Queue: {}", email.getEmailTo());
 		try {

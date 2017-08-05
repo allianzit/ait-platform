@@ -15,7 +15,7 @@
  */
 package com.ait.platform.common.service;
 
-import com.ait.platform.common.model.vo.AitMailVO;
+import com.ait.platform.common.model.entity.AitTaskEmailPivot;
 
 /**
  * @author AllianzIT
@@ -23,6 +23,6 @@ import com.ait.platform.common.model.vo.AitMailVO;
  */
 public interface IAitMailSenderSrv {
 
-	void sendMail(final AitMailVO mail);
+	void sendMail(final AitTaskEmailPivot mail);
 
 }

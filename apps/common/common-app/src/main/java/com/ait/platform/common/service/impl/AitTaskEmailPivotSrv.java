@@ -15,11 +15,11 @@
  */
 package com.ait.platform.common.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,9 @@ import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.logger.AitLogger;
 import com.ait.platform.common.model.entity.AitTaskEmailAttached;
 import com.ait.platform.common.model.entity.AitTaskEmailPivot;
+import com.ait.platform.common.model.vo.AitTaskEmailAttachedVO;
 import com.ait.platform.common.model.vo.AitTaskEmailPivotVO;
+import com.ait.platform.common.repository.IAitTaskEmailAttachedRepo;
 import com.ait.platform.common.repository.IAitTaskEmailPivotRepo;
 import com.ait.platform.common.service.IAitTaskEmailPivotSrv;
 
@@ -44,17 +46,25 @@ public class AitTaskEmailPivotSrv extends AitTaskPivotSrv<AitTaskEmailPivot> imp
 	@Autowired
 	private IAitTaskEmailPivotRepo emailRepo;
 
+	@Autowired
+	private IAitTaskEmailAttachedRepo attachedRepo;
+
 	@Override
 	public Boolean create(AitTaskEmailPivotVO dto) {
 		AitTaskEmailPivot email = new AitTaskEmailPivot();
-		// BeanUtils.copyProperties(dto, email, "attachements");
-		BeanUtils.copyProperties(dto, email);
-		if (email.getAttachments() != null) {
-			for (AitTaskEmailAttached attached : email.getAttachments()) {
+		convertAToB(dto, email);
+
+		emailRepo.save(email);
+		if (dto.getAttachments() != null) {
+			email.setAttachments(new HashSet<>());
+			for (AitTaskEmailAttachedVO from : dto.getAttachments()) {
+				AitTaskEmailAttached attached = convertAToB(from, new AitTaskEmailAttached());
 				attached.setEmail(email);
+				email.getAttachments().add(attached);
+				attachedRepo.save(attached);
 			}
 		}
-		emailRepo.save(email);
+
 		return true;
 	}
 

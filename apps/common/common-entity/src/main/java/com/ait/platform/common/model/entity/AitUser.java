@@ -86,4 +86,7 @@ public class AitUser implements Serializable {
 
 	@Column(name = "EMAIL", columnDefinition = "VARCHAR2(80)")
 	private String email;
+	
+	@Column(name = "ROLES", columnDefinition = "VARCHAR2(4000)")
+	private String userRoles;
 }

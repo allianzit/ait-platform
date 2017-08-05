@@ -1,18 +1,21 @@
-package com.ait.platform.common.util;
+package com.ait.platform.common.pdf.service;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,15 +24,15 @@ import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.model.enums.pdf.AitPDFOrientation;
 import com.ait.platform.common.model.enums.pdf.AitPDFPageSize;
 import com.ait.platform.common.model.enums.pdf.EAitPdfOrigin;
-import com.ait.platform.common.model.vo.pdf.AitPdfPageVO;
-import com.ait.platform.common.model.vo.pdf.AitPdfPropertiesVO;
-import com.ait.platform.common.model.vo.pdf.AitPdfValueVO;
+import com.ait.platform.common.pdf.model.vo.AitPdfPageVO;
+import com.ait.platform.common.pdf.model.vo.AitPdfPropertiesVO;
+import com.ait.platform.common.pdf.model.vo.AitPdfValueVO;
 import com.github.jhonnymertz.wkhtmltopdf.wrapper.Pdf;
 import com.github.jhonnymertz.wkhtmltopdf.wrapper.params.Param;
 
-public class AitPdfGenarator {
+public class AitPdfGenerator {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AitPdfGenarator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AitPdfGenerator.class);
 
 	private static final String QUIET_PARAM = "-q";
 	private static final String ORIENTATION_PARAM = "--orientation";
@@ -39,116 +42,87 @@ public class AitPdfGenarator {
 	private static final String HEADER_PARAM = "--header-html";
 	private static final String FOOTER_PARAM = "--footer-html";
 
-	private static String headerUri = "";
-	private static String footerUri = "";
-
-	@PostConstruct
-	private void init() throws IOException {
-		headerUri = createFileAndGetPath("");
-		footerUri = createFileAndGetPath("");
-	}
-
 	public static byte[] createPdf(AitPdfPropertiesVO properties) {
-		return createPdfInternal(properties, null);
-	}
-
-	public static void createPdf(AitPdfPropertiesVO properties, String path) {
-		createPdfInternal(properties, path);
-	}
-
-	private static byte[] createPdfInternal(AitPdfPropertiesVO properties, String path) {
 		Pdf pdf = new Pdf();
 		try {
-			AitPdfPageVO customHeader = null;
-			AitPdfPageVO customFooter = null;
 			for (AitPdfPageVO page : properties.getPages()) {
-				if (page.isCustomHeader()) {
-					customHeader = page;
-				} else if (page.isCustomFooter()) {
-					customFooter = page;
+				String content = page.getContent();
+				// se reemplazan los parametros
+				boolean fromURL = EAitPdfOrigin.URL.equals(page.getOrigin());
+				if (fromURL) {
+					LOGGER.debug("Page content from url: {}. We can't replace content", page.getContent());
 				} else {
-					addContentPage(pdf, page);
+					content = replaceContent(page.getOrigin(), content, page.getValues());
+
+				}
+				if (page.isHeader()) {
+					addPageParam(pdf, HEADER_PARAM, fromURL, content);
+				} else if (page.isFooter()) {
+					addPageParam(pdf, FOOTER_PARAM, fromURL, content);
+				} else {
+					if (fromURL) {
+						pdf.addPageFromUrl(content);
+					} else {
+						pdf.addPageFromString(content);
+					}
 				}
 			}
 			pdf.addParam(new Param(QUIET_PARAM));
 			pdf.addParam(new Param(ORIENTATION_PARAM, properties.getOrientation().getDescr()));
 			pdf.addParam(new Param(PAGE_SIZE_PARAM, properties.getPageSize().getDescr()));
 
-			if (properties.isIncludePageNumber()) {
-				pdf.addParam(new Param(PAGE_NUMBER_PARAM, PAGE_NUMBER_VALUE));
-			}
-			if (properties.isIncludeHeader()) {
-				addPageParam(pdf, HEADER_PARAM, customHeader, headerUri);
-			}
-			if (properties.isIncludeFooter()) {
-				addPageParam(pdf, FOOTER_PARAM, customFooter, footerUri);
-			}
-
 			for (Param param : properties.getAdditionalParams()) {
 				pdf.addParam(param);
 			}
-
-			if (path == null) {
-				return pdf.getPDF();
+			if (properties.isIncludePageNumber()) {
+				pdf.addParam(new Param(PAGE_NUMBER_PARAM, PAGE_NUMBER_VALUE));
 			}
-			pdf.saveAs(path);
+
+			// se retorna el PDF en forma binaria
+			return pdf.getPDF();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private static void addContentPage(Pdf pdf, AitPdfPageVO page) {
-		// si se deben realizar reemplazos de contenido
-		if (page.getValues() != null) {
-			if (page.getOrigin().equals(EAitPdfOrigin.URL)) {
-				throw new AitException(HttpStatus.BAD_REQUEST, "No se pueden reemplazar valores", "El origen no puede ser de tipo URL");
-			}
-			// read file into stream, try-with-resources
+	private static String replaceContent(EAitPdfOrigin origin, String content, AitPdfValueVO values) {
+		// read file into stream, try-with-resources
+		if (EAitPdfOrigin.FILE.equals(origin)) {
 			StringBuilder contentBuilder = new StringBuilder();
-			try (Stream<String> stream = Files.lines(Paths.get(page.getContent()))) {
+			try (Stream<String> stream = Files.lines(Paths.get(content))) {
 				stream.forEach(contentBuilder::append);
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			String newContent = replaceContent(contentBuilder.toString(), page.getValues());
-			pdf.addPageFromString(newContent);
-		} else {
-			switch (page.getOrigin()) {
-			case STRING:
-				pdf.addPageFromString(page.getContent());
-				break;
-			case FILE:
-				pdf.addPageFromFile(page.getContent());
-				break;
-			case URL:
-				pdf.addPageFromUrl(page.getContent());
-				break;
-			}
+			return replaceContent(contentBuilder.toString(), values);
 		}
-
+		return replaceContent(content, values);
 	}
 
 	private static String replaceContent(String content, AitPdfValueVO values) {
 		// valor simple
 		if (values.getValue() != null) {
-			content = content.replaceAll("::" + values.getKey() + "::", values.getValue());
+			String newValue = values.isEscapeHTML() ? StringEscapeUtils.escapeHtml4(values.getValue()) : values.getValue();
+			content = content.replaceAll("::" + values.getKey() + "::", Matcher.quoteReplacement(newValue));
 		}
 		// lista de valores
 		else if (values.getKey() != null) {
 			String tagEnd = "</" + values.getKey() + ">";
-			String listString = content.substring(content.indexOf("<" + values.getKey() + ">"), content.indexOf(tagEnd) + tagEnd.length());
-			String subContent = listString.substring(tagEnd.length() - 1, listString.length() - tagEnd.length() - 1);
-			StringBuffer listBuffer = new StringBuffer();
-			for (AitPdfValueVO value : values.getValues()) {
-				listBuffer.append(replaceContent(subContent, value));
+			int begin = content.indexOf("<" + values.getKey() + ">");
+			int end = content.indexOf(tagEnd);
+			if (begin > -1 && end > -1) {
+				String listString = content.substring(begin, end + tagEnd.length());
+				String subContent = listString.substring(tagEnd.length() - 1, listString.length() - tagEnd.length() - 1);
+				StringBuffer listBuffer = new StringBuffer();
+				for (AitPdfValueVO value : values.getValues()) {
+					listBuffer.append(replaceContent(subContent, value));
+				}
+				content = content.replace(listString, listBuffer.toString());
 			}
-			content = content.replace(listString, listBuffer.toString());
 		}
 		// registro
 		else {
@@ -159,20 +133,13 @@ public class AitPdfGenarator {
 		return content;
 	}
 
-	private static void addPageParam(Pdf pdf, String paramName, AitPdfPageVO customHeader, String defaultValue) throws IOException {
-		String uri = defaultValue;
-		if (customHeader != null) {
-			if (EAitPdfOrigin.STRING.equals(customHeader.getOrigin())) {
-				uri = createFileAndGetPath(customHeader.getContent());
-			} else {
-				uri = customHeader.getContent();
-			}
+	private static void addPageParam(Pdf pdf, String paramName, boolean fromURL, String content) throws IOException {
+		String uri = content;
+		// si no es una referencia a url
+		if (!fromURL) {
+			uri = createFileAndGetPath(content);
 		}
-		if (uri.isEmpty()) {
-			LOGGER.warn("No se definió apropiadamente la uri del parametro {}", paramName);
-		} else {
-			pdf.addParam(new Param(paramName, uri));
-		}
+		pdf.addParam(new Param(paramName, uri));
 	}
 
 	private static String createFileAndGetPath(String content) throws IOException {
@@ -183,21 +150,22 @@ public class AitPdfGenarator {
 
 	public static void main(String[] args) {
 
-		final String content = "C:/desarrollo/wsMinCIT/rte-app/templates/planilla-a.html";
+		final String content = "C:/desarrollo/wsMinCIT/rte-app/templates/letter-approve.html";
 		final String header = "C:/desarrollo/wsMinCIT/rte-app/templates/header.html";
-		final String footer = "C:/desarrollo/wsMinCIT/rte-app/templates/footer.html";
+		final String footer = "C:/desarrollo/wsMinCIT/rte-app/templates/footer-letter.html";
 
 		for (int i = 0; i < 1; i++) {
 			long ini = System.currentTimeMillis();
 			String name = "d:\\prueba" + i + ".pdf";
 			List<AitPdfPageVO> pages = new ArrayList<>();
-			AitPdfPageVO headerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, header);
-			headerPage.setCustomHeader(true);
-			AitPdfPageVO footerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, footer);
-			footerPage.setCustomFooter(true);
-			pages.add(headerPage);
 
 			AitPdfValueVO values = new AitPdfValueVO();
+			AitPdfPageVO headerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, header, values);
+			headerPage.setHeader(true);
+			AitPdfPageVO footerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, footer, values);
+			footerPage.setFooter(true);
+			pages.add(headerPage);
+
 			values.addValue("motopartName", "Nombre de la empresa motopartista!!!");
 			values.addValue("motopartNIT", "321654654-8!!!");
 
@@ -225,14 +193,29 @@ public class AitPdfGenarator {
 			}
 
 			pages.add(new AitPdfPageVO(EAitPdfOrigin.FILE, content, values));
-			pages.add(new AitPdfPageVO(EAitPdfOrigin.STRING, "<!DOCTYPE HTML><html><head></head><body><div align='center' style='font-weight: bold'>HOLA!!!</div></body></html>"));
+			// pages.add(new AitPdfPageVO(EAitPdfOrigin.STRING, "<!DOCTYPE HTML><html><head></head><body><div align='center' style='font-weight: bold'>HOLA!!!</div></body></html>"));
 			pages.add(footerPage);
 
 			AitPdfPropertiesVO properties = new AitPdfPropertiesVO();
 			properties.setPages(pages);
-			properties.setOrientation(AitPDFOrientation.LANDSCAPE);
-			properties.setPageSize(AitPDFPageSize.LEGAL);
-			AitPdfGenarator.createPdf(properties, name);
+			properties.setIncludePageNumber(false);
+			properties.setOrientation(AitPDFOrientation.PORTRAIT);
+			properties.setPageSize(AitPDFPageSize.LETTER);
+			properties.getAdditionalParams().add(new Param("-L", "20mm"));
+			properties.getAdditionalParams().add(new Param("-R", "20mm"));
+			properties.getAdditionalParams().add(new Param("-B", "40mm"));
+			byte[] data = AitPdfGenerator.createPdf(properties);
+
+			BufferedOutputStream stream;
+			try {
+				final File file = new File(name);
+				stream = new BufferedOutputStream(new FileOutputStream(file));
+				stream.write(data);
+				stream.close();
+			} catch (IOException e) {
+				throw new AitException(HttpStatus.BAD_REQUEST, "Error creando el adjunto", Arrays.asList(new String[0]), e);
+			}
+
 			System.out.println(name + " - " + (System.currentTimeMillis() - ini));
 		}
 

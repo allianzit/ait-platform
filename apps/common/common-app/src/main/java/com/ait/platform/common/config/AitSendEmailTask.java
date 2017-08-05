@@ -21,11 +21,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ait.platform.common.config.AitTaskBase;
 import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.logger.AitLogger;
 import com.ait.platform.common.model.entity.AitTaskEmailPivot;
-import com.ait.platform.common.model.vo.AitMailVO;
 import com.ait.platform.common.model.vo.AitTaskVO;
 import com.ait.platform.common.service.IAitMailSenderSrv;
 import com.ait.platform.common.service.IAitTaskEmailPivotSrv;
@@ -39,9 +37,6 @@ public class AitSendEmailTask extends AitTaskBase {
 
 	@Autowired
 	private IAitMailSenderSrv emailSrv;
-
-	// @Autowired
-	// private IAitArchiveSrv archiveSrv;
 
 	@Autowired
 	private IAitTaskEmailPivotSrv taskResultSrv;
@@ -59,43 +54,24 @@ public class AitSendEmailTask extends AitTaskBase {
 			if (totalEmails == 0) {
 				resultMsg = "No hay emails pendientes por enviar";
 			} else {
-				for (final AitTaskEmailPivot reg : emails) {
+				for (final AitTaskEmailPivot email : emails) {
 					try {
-						AitMailVO email = new AitMailVO();
-						email.addToUser(reg.getEmailTo());
-
-						if (!reg.getEmailCC().isEmpty()) {
-							String[] ccList = reg.getEmailCC().split(",");
-							for (String cc : ccList) {
-								email.addToUser(cc);
-							}
-						}
-
-						email.setSubject(reg.getEmailSubject());
-						email.setContent(reg.getEmailBody());
-
-						// TODO attached
-						// Set<AitTaskEmailAttached> attachemens = reg.getAttachments();
-						// for (AitTaskEmailAttached attached : attachemens) {
-						// archiveSrv.getDocumentFile(attached.getIsPublic(), attached.getSubFolder(), attached.getUuid(), false).getData();
-						// }
-
+						email.setMessage("NA");
 						// se envia el email
-						// TODO contemplar la opcion de enviar en serie en lugar de usar hilos (para capturar las trazas de error)
 						emailSrv.sendMail(email);
 
 						// se actualiza el estado del email a "PROCESADO"
-						reg.setState("P");
-						reg.setSendedDate(new Date());
+						email.setState("P");
+						email.setSendedDate(new Date());
 					} catch (Exception e) {
-						reg.setMessage(e.getMessage());
+						email.setMessage(e.getMessage());
 						// se actualiza el estado del email a "ACTIVO" si no se han realizado todos los intentos permitidos, de lo contrario, se deja en ERROR
-						reg.setState(reg.getTries() < task.getMaxTries() ? "A" : "E");
+						email.setState(email.getTries() < task.getMaxTries() ? "A" : "E");
 					}
 					// se actualiza la cantidad de intentos
-					reg.setTries(reg.getTries() + 1);
+					email.setTries(email.getTries() + 1);
 					// se actualiza el estado
-					taskResultSrv.save(reg);
+					taskResultSrv.save(email);
 				}
 				// se guardan todos los registros en una sola transaccion
 				resultMsg = "Cantidad de emails procesados correctamente: " + totalEmails;

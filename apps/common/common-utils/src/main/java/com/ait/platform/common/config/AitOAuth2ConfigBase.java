@@ -63,9 +63,10 @@ public class AitOAuth2ConfigBase extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.httpBasic().disable();
-		http.authorizeRequests().antMatchers("/", "/public/**").permitAll()//
+		http.authorizeRequests().antMatchers("/", "/public/**","/internal/**").permitAll()//
 				.anyRequest().authenticated()//
-				.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+				;
+//				.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	}
 
 }

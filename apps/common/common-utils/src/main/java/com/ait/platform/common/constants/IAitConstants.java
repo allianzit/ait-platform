@@ -26,7 +26,7 @@ public interface IAitConstants {
 	static final String AIT_BASE_PACKAGE = "com.ait.platform";
 	static final String AIT_JPA_PACKAGE = AIT_BASE_PACKAGE + ".**.repository";
 	static final String AIT_ENTITY_PACKAGE = AIT_BASE_PACKAGE + ".**.entity";
-	static final String AIT_API_CLIENTS_PACKAGE = AIT_BASE_PACKAGE+".**.api.client";
+	static final String AIT_API_CLIENTS_PACKAGE = AIT_BASE_PACKAGE + ".**.api.client";
 
 	static final String PROD_PROFILE = "prod";
 	static final Locale LOCALE = new Locale("es_CO");
@@ -35,4 +35,5 @@ public interface IAitConstants {
 
 	static final String WILDCARD = "%";
 	static final String ENCODE_INSENSITVE = "'US7ASCII'";
+	static final char SEPARATOR = '/';
 }

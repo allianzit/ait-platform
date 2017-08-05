@@ -12,25 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package com.ait.platform.common.service.impl;
+ */package com.ait.platform.common.repository;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.history.RevisionRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import com.ait.platform.common.model.entity.AitTaskPivot;
-import com.ait.platform.common.service.IAitTaskPivotSrv;
+import com.ait.platform.common.model.entity.AitTaskEmailAttached;
 
 /**
  * @author AllianzIT
  *
- * @param <K>
  */
-public abstract class AitTaskPivotSrv<K extends AitTaskPivot> extends AitSrv implements IAitTaskPivotSrv<K> {
-
-	@Value("${spring.jpa.properties.hibernate.jdbc.batch_size:30}")
-	protected Integer batchSize;
-
-	protected Integer getBatchSize() {
-		return batchSize;
-	}
+@RepositoryRestResource(exported = false)
+public interface IAitTaskEmailAttachedRepo extends RevisionRepository<AitTaskEmailAttached, Integer, Integer>, JpaRepository<AitTaskEmailAttached, Integer> {
 
 }

@@ -38,8 +38,7 @@ import lombok.ToString;
 public class AitTaskEmailAttachedVO implements Serializable {
 
 	private static final long serialVersionUID = 9130647414096592407L;
-	
-	private Boolean isPublic;
+
 	private String subFolder;
 	private String uuid;
 

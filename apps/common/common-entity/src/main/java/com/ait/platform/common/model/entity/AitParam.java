@@ -24,6 +24,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -86,7 +87,8 @@ public class AitParam implements Serializable {
 	private String name;
 
 	@Basic(optional = false)
-	@Column(name = "VAR_VALUE", columnDefinition = "VARCHAR2(4000)")
+	@Column(name = "VAR_VALUE", columnDefinition = "CLOB NOT NULL")
+	@Lob
 	private String value;
 
 	public AitParam(final Integer id) {

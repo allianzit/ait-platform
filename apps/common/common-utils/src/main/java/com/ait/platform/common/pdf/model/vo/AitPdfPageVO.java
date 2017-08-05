@@ -13,46 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ait.platform.common.model.vo;
+package com.ait.platform.common.pdf.model.vo;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
+import com.ait.platform.common.model.enums.pdf.EAitPdfOrigin;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@NoArgsConstructor
+/**
+ * @author AllianzIT
+ *
+ */
+@NoArgsConstructor(onConstructor = @__({ @JsonCreator }))
+@AllArgsConstructor
+@ToString(includeFieldNames = true)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class AitMailVO implements Serializable {
+public class AitPdfPageVO implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6980732477452978174L;
+	private static final long serialVersionUID = 7182235863687838588L;
 
-	private final List<String> toUser = new ArrayList<String>();
-
-	private final Collection<File> attachment = new ArrayList<File>();
-
-	private String subject;
-
+	private boolean header = false;
+	private boolean footer = false;
+	private EAitPdfOrigin origin;
 	private String content;
+	private AitPdfValueVO values = new AitPdfValueVO();
 
-	public void addAttachment(final File attached) {
-		attachment.add(attached);
-	}
-
-	public void addToUser(final String mail) {
-		toUser.add(mail);
+	public AitPdfPageVO(EAitPdfOrigin origin, String content, AitPdfValueVO values) {
+		super();
+		this.origin = origin;
+		this.content = content;
+		this.values = values;
 	}
 
 }

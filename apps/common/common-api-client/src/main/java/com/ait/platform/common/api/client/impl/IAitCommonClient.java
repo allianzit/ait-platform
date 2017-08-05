@@ -34,7 +34,7 @@ import com.ait.platform.common.model.vo.AitTaskEmailPivotVO;
 @FeignClient("common")
 interface IAitCommonClient {
 
-	@RequestMapping(value = "/secure/param/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/internal/param/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	ResponseEntity<AitParamVO> getAitParamByName(@PathVariable("name") final String name);
 

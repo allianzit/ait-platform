@@ -74,14 +74,10 @@ public class AitTaskEmailAttached implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private AitTaskEmailPivot email;
 
-	@Basic(optional = false)
-	@Column(name = "IS_PUBLIC")
-	private Boolean isPublic;
-
-	@Column(name = "SUB_FOLDER", nullable = true, columnDefinition = "VARCHAR2(128)")
+	@Column(name = "SUB_FOLDER", nullable = true, columnDefinition = "VARCHAR2(512)")
 	private String subFolder;
 
-	@Column(name = "DOC_UUID", nullable = false, columnDefinition = "VARCHAR2(64)")
+	@Column(name = "DOC_UUID", nullable = false, columnDefinition = "VARCHAR2(100)")
 	private String uuid;
 
 	public AitTaskEmailAttached(final Integer id) {

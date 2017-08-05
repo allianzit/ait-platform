@@ -73,7 +73,6 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 			user.setLastName(details.get("family_name"));
 			user.setEmail(details.get("email"));
 			user.setEnabled(true);
-			userRepo.save(user);
 		}
 		AitUserVO userVO = new AitUserVO();
 		try {
@@ -82,9 +81,12 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 			// se crea el menu del usuario
 			Collection<GrantedAuthority> authorities = principal.getAuthorities();
 			if (!authorities.isEmpty()) {
+				StringBuffer sb = new StringBuffer();
 				for (GrantedAuthority auth : authorities) {
 					userVO.getRoles().add(auth.getAuthority());
+					sb.append(",").append(auth.getAuthority()).append(",");
 				}
+				user.setUserRoles(sb.toString());
 				logger.info("Loading user menu for authorities: {}", authorities);
 				List<AitMenu> menuList = menuRepo.findRootOpts();
 				for (AitMenu menuOpc : menuList) {
@@ -93,9 +95,9 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 					if (hasAuthority(opc, menuOpc.getChildren(), authorities)) {
 						userVO.getMenu().add(opc);
 					}
-
 				}
 			}
+			userRepo.save(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
