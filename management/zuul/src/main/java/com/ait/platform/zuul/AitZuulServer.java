@@ -42,6 +42,9 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+
+import com.github.mthizo247.cloud.netflix.zuul.web.socket.EnableZuulWebSocket;
 
 /**
  * @author AllianzIT
@@ -52,6 +55,8 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 @EnableZuulProxy
 @EnableOAuth2Sso
 @EnableEurekaClient
+@EnableZuulWebSocket
+@EnableWebSocketMessageBroker
 @ComponentScan({ "com.ait.platform.zuul" })
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class AitZuulServer extends WebSecurityConfigurerAdapter {

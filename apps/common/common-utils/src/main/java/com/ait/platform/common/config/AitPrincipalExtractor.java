@@ -2,10 +2,12 @@ package com.ait.platform.common.config;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
@@ -16,10 +18,19 @@ import org.springframework.util.StringUtils;
 @Configuration
 public class AitPrincipalExtractor {
 
+	@Autowired
+	private OAuth2ProtectedResourceDetails resource;
+
 	@Bean
-	protected OAuth2RestTemplate OAuth2RestTemplate(OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
-		return new OAuth2RestTemplate(resource, context);
+	@Primary
+	public OAuth2RestOperations restTemplate(OAuth2ClientContext clientContext) {
+		return new OAuth2RestTemplate(resource, clientContext);
 	}
+
+	// @Bean
+	// protected OAuth2RestTemplate OAuth2RestTemplate(OAuth2ClientContext context) {
+	// return new OAuth2RestTemplate(resource, context);
+	// }
 
 	@Bean
 	@SuppressWarnings("unchecked")
