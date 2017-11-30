@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+        http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="ait-user-storage-jpa" transaction-type="JTA">
+        <jta-data-source>java:jboss/datasources/AitXADS</jta-data-source>
+
+        <class>com.ait.platform.keycloak.storage.user.UserEntity</class>
+
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.default_catalog" value="AdventureWorks2014" />
+			<property name="hibernate.default_schema" value="dbo" />
+			<property name="hibernate.id.new_generator_mappings" value="false" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2012Dialect" />
+        </properties>
+    </persistence-unit>
+</persistence>
