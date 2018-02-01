@@ -55,7 +55,8 @@ public class AitCorsFilter implements Filter {
 		} else {
 			response.setHeader("Cache-Control", "no-cache, no-store");
 		}
-		response.setHeader("Access-Control-Allow-Origin", "*");// TODO cambiar para permitir unicamente peticiones de ips conocidas y seguras
+//		response.setHeader("Access-Control-Allow-Origin", "https://localhost:4200");// TODO cambiar para permitir unicamente peticiones de ips conocidas y seguras
+//		response.setHeader("Access-Control-Allow-Credentials", "true");
 		if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
 			response.setHeader("Access-Control-Allow-Methods", "POST,GET,DELETE");
 			response.setHeader("Access-Control-Allow-Headers", "X-XSRF-TOKEN, Origin, Accept, x-auth-token, X-Requested-With, Content-Type, Authorization, Access-Control-Request-Method, Access-Control-Request-Headers, Cache-Control, Content-Length");

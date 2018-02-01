@@ -148,76 +148,91 @@ public class AitPdfGenerator {
 		return temp.getAbsolutePath();
 	}
 
+	public static int k = 0;
+
 	public static void main(String[] args) {
-
-		final String content = "C:/desarrollo/wsMinCIT/rte-app/templates/letter-approve.html";
-		final String header = "C:/desarrollo/wsMinCIT/rte-app/templates/header.html";
-		final String footer = "C:/desarrollo/wsMinCIT/rte-app/templates/footer-letter.html";
-
-		for (int i = 0; i < 1; i++) {
-			long ini = System.currentTimeMillis();
-			String name = "d:\\prueba" + i + ".pdf";
-			List<AitPdfPageVO> pages = new ArrayList<>();
-
-			AitPdfValueVO values = new AitPdfValueVO();
-			AitPdfPageVO headerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, header, values);
-			headerPage.setHeader(true);
-			AitPdfPageVO footerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, footer, values);
-			footerPage.setFooter(true);
-			pages.add(headerPage);
-
-			values.addValue("motopartName", "Nombre de la empresa motopartista!!!");
-			values.addValue("motopartNIT", "321654654-8!!!");
-
-			// lista de motopartes
-			AitPdfValueVO rows = values.newList("motopartItem");
-			for (int j = 0; j < 40; j++) {
-				int totalSupplies = new Random().nextInt(19);
-
-				// nuevo item motoparte
-				AitPdfValueVO row = rows.newListItem();
-
-				// celdas de la fila
-				row.addValue("descMotopart", "descripción " + j);
-				row.addValue("partNumber", "3215" + j);
-				row.addValue("subpart", "24654" + j);
-				row.addValue("rowspan", "" + (totalSupplies + 1));
-
-				// lista de suministros de la motoparte
-				AitPdfValueVO supplies = row.newList("supplyItem");
-				for (int k = 0; k < totalSupplies; k++) {
-					AitPdfValueVO supply = supplies.newListItem();
-					supply.addValue("subpartSupply", "32554-" + (k + 1));
-					supply.addValue("van", "111" + (k + 1) + " - " + totalSupplies);
-				}
-			}
-
-			pages.add(new AitPdfPageVO(EAitPdfOrigin.FILE, content, values));
-			// pages.add(new AitPdfPageVO(EAitPdfOrigin.STRING, "<!DOCTYPE HTML><html><head></head><body><div align='center' style='font-weight: bold'>HOLA!!!</div></body></html>"));
-			pages.add(footerPage);
-
-			AitPdfPropertiesVO properties = new AitPdfPropertiesVO();
-			properties.setPages(pages);
-			properties.setIncludePageNumber(false);
-			properties.setOrientation(AitPDFOrientation.PORTRAIT);
-			properties.setPageSize(AitPDFPageSize.LETTER);
-			properties.getAdditionalParams().add(new Param("-L", "20mm"));
-			properties.getAdditionalParams().add(new Param("-R", "20mm"));
-			properties.getAdditionalParams().add(new Param("-B", "40mm"));
-			byte[] data = AitPdfGenerator.createPdf(properties);
-
-			BufferedOutputStream stream;
-			try {
-				final File file = new File(name);
-				stream = new BufferedOutputStream(new FileOutputStream(file));
-				stream.write(data);
-				stream.close();
-			} catch (IOException e) {
-				throw new AitException(HttpStatus.BAD_REQUEST, "Error creando el adjunto", Arrays.asList(new String[0]), e);
-			}
-
-			System.out.println(name + " - " + (System.currentTimeMillis() - ini));
+		for (k = 0; k < 10; k++) {
+			createPdfTest(k);
 		}
+
+	}
+
+	private static void createPdfTest(int id) {
+		System.out.println(id + ":" + (System.currentTimeMillis()));
+		long ini = System.currentTimeMillis();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				final String content = "C:/desarrollo/wsMinCIT/rte-app/templates/letter-approve.html";
+				final String header = "C:/desarrollo/wsMinCIT/rte-app/templates/header.html";
+				final String footer = "C:/desarrollo/wsMinCIT/rte-app/templates/footer-letter.html";
+
+				// for (int i = 0; i < 1; i++) {
+				String name = "d:\\prueba" + id + ".pdf";
+				List<AitPdfPageVO> pages = new ArrayList<>();
+
+				AitPdfValueVO values = new AitPdfValueVO();
+				AitPdfPageVO headerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, header, values);
+				headerPage.setHeader(true);
+				AitPdfPageVO footerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, footer, values);
+				footerPage.setFooter(true);
+				pages.add(headerPage);
+
+				values.addValue("motopartName", "Nombre de la empresa motopartista!!!");
+				values.addValue("motopartNIT", "321654654-8!!!");
+
+				// lista de motopartes
+				AitPdfValueVO rows = values.newList("motopartItem");
+				for (int j = 0; j < 40; j++) {
+					int totalSupplies = new Random().nextInt(19);
+
+					// nuevo item motoparte
+					AitPdfValueVO row = rows.newListItem();
+
+					// celdas de la fila
+					row.addValue("descMotopart", "descripción " + j);
+					row.addValue("partNumber", "3215" + j);
+					row.addValue("subpart", "24654" + j);
+					row.addValue("rowspan", "" + (totalSupplies + 1));
+
+					// lista de suministros de la motoparte
+					AitPdfValueVO supplies = row.newList("supplyItem");
+					for (int k = 0; k < totalSupplies; k++) {
+						AitPdfValueVO supply = supplies.newListItem();
+						supply.addValue("subpartSupply", "32554-" + (k + 1));
+						supply.addValue("van", "111" + (k + 1) + " - " + totalSupplies);
+					}
+				}
+
+				pages.add(new AitPdfPageVO(EAitPdfOrigin.FILE, content, values));
+				// pages.add(new AitPdfPageVO(EAitPdfOrigin.STRING, "<!DOCTYPE HTML><html><head></head><body><div align='center' style='font-weight: bold'>HOLA!!!</div></body></html>"));
+				pages.add(footerPage);
+
+				AitPdfPropertiesVO properties = new AitPdfPropertiesVO();
+				properties.setPages(pages);
+				properties.setIncludePageNumber(false);
+				properties.setOrientation(AitPDFOrientation.PORTRAIT);
+				properties.setPageSize(AitPDFPageSize.LETTER);
+				properties.getAdditionalParams().add(new Param("-L", "20mm"));
+				properties.getAdditionalParams().add(new Param("-R", "20mm"));
+				properties.getAdditionalParams().add(new Param("-B", "40mm"));
+				byte[] data = AitPdfGenerator.createPdf(properties);
+
+				BufferedOutputStream stream;
+				try {
+					final File file = new File(name);
+					stream = new BufferedOutputStream(new FileOutputStream(file));
+					stream.write(data);
+					stream.close();
+				} catch (IOException e) {
+					throw new AitException(HttpStatus.BAD_REQUEST, "Error creando el adjunto", Arrays.asList(new String[0]), e);
+				}
+
+				System.out.println(name + " - " + (System.currentTimeMillis() - ini));
+				// }
+			}
+		}).start();
 
 	}
 }

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import javax.servlet.MultipartConfigElement;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -39,12 +40,22 @@ import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
+import com.ait.platform.zuul.config.AitOAuth2BearerPrincipalHeadersCallback;
 import com.github.mthizo247.cloud.netflix.zuul.web.socket.EnableZuulWebSocket;
+import com.github.mthizo247.cloud.netflix.zuul.web.socket.WebSocketHttpHeadersCallback;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author AllianzIT
@@ -56,6 +67,7 @@ import com.github.mthizo247.cloud.netflix.zuul.web.socket.EnableZuulWebSocket;
 @EnableOAuth2Sso
 @EnableEurekaClient
 @EnableZuulWebSocket
+@RestController
 @EnableWebSocketMessageBroker
 @ComponentScan({ "com.ait.platform.zuul" })
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
@@ -67,17 +79,18 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/login", "/login/**", "**/public/**").permitAll()//
+		http.authorizeRequests().antMatchers("/", "/login", "/login/**", "**/public/**", "/ws-ait**").permitAll()//
 				.anyRequest().authenticated()//
 				.and().exceptionHandling()//
 				.and().logout().logoutSuccessUrl("/").permitAll()//
 				.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+		http.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsMode.SAMEORIGIN));
 	}
 
 	// se ignora todo el path asociado a contenido estatico
 	@Override
 	public void configure(final WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/**/public/**");
+		web.ignoring().antMatchers("/**/public/**", "/ws-ait**");
 	}
 
 	@Bean
@@ -117,4 +130,25 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 		return factory.createMultipartConfig();
 	}
 
+	@Bean
+	public WebSocketHttpHeadersCallback webSocketHttpHeadersCallback() {
+		return new AitOAuth2BearerPrincipalHeadersCallback();
+	}
+
+	@RestController
+	public class Test {
+		@Autowired
+		OAuth2RestTemplate template;
+
+		@Data
+		@AllArgsConstructor
+		public class AitMessage {
+			String token;
+		}
+
+		@RequestMapping("/csrf")
+		public AitMessage csrf(CsrfToken token) {
+			return new AitMessage(template.getAccessToken().getValue());
+		}
+	}
 }

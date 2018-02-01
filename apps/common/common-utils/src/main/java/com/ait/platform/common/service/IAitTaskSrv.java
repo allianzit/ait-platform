@@ -30,4 +30,6 @@ public interface IAitTaskSrv {
 	public void updateTaskState(final AitTask task);
 
 	AitTask getTaskByBeanName(final String beanName);
+
+	void updaTasks(String serverIp, int serverPort);
 }

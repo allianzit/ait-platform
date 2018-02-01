@@ -63,9 +63,11 @@ public class AitOAuth2ConfigBase extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.httpBasic().disable();
-		http.authorizeRequests().antMatchers("/", "/public/**", "/internal/**").permitAll()//
+		http.authorizeRequests().antMatchers("/", "/public/**", "/internal/**", "/ws-ait**", "/ws-ait/**").permitAll()//
 				.anyRequest().authenticated()//
 		;
+		http.headers().frameOptions().sameOrigin();
+		http.csrf().ignoringAntMatchers("/ws-ait/**");
 		// .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
 		// se habilita el contexto se seguridad para llamados asincronos

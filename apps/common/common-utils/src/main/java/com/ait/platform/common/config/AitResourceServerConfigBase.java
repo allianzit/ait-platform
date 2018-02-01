@@ -36,7 +36,7 @@ public class AitResourceServerConfigBase extends ResourceServerConfigurerAdapter
 	@Override
 	public void configure(final HttpSecurity http) throws Exception {
 		http.httpBasic().disable();
-		http.authorizeRequests().antMatchers("/", "/public/**", "/internal/**").permitAll()//
+		http.authorizeRequests().antMatchers("/", "/public/**", "/internal/**","/ws-ait/**").permitAll()//
 				.anyRequest().authenticated()//
 				;
 //				.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

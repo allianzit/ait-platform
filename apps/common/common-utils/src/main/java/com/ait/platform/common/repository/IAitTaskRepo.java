@@ -17,6 +17,7 @@
 import java.util.Collection;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -35,5 +36,9 @@ public interface IAitTaskRepo extends RevisionRepository<AitTask, Integer, Integ
 	
 	@Query("SELECT t FROM AitTask t WHERE t.enabled = true and t.bean = ?1")
 	AitTask getByBeanName(String beanName);
+
+	@Modifying
+	@Query("UPDATE AitTask t SET t.isRunning = false WHERE t.serverIp = ?1 and t.serverPort = ?2")
+	void updateByServerIpAndServerPort(String serverIp, int serverPort);
 
 }

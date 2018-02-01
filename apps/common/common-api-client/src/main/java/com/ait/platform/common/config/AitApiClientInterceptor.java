@@ -17,6 +17,7 @@ package com.ait.platform.common.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
@@ -38,12 +39,11 @@ import feign.RequestTemplate;
 public class AitApiClientInterceptor implements RequestInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(AitApiClientInterceptor.class);
 
-	private static final String AUTH_HEADER = "Authorization";
 	private static final String BEARER = "Bearer";
 
 	@Override
 	public void apply(RequestTemplate template) {
-		if (!template.headers().containsKey(AUTH_HEADER)) {
+		if (!template.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
 			AitLogger.debug(logger, "Trying to assign the authorization token to the request header");
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (auth != null && auth.getDetails() instanceof OAuth2AuthenticationDetails) {
@@ -51,7 +51,7 @@ public class AitApiClientInterceptor implements RequestInterceptor {
 				if (StringUtils.isEmpty(details.getTokenValue())) {
 					AitLogger.warn(logger, "Empty token value.");
 				} else {
-					template.header(AUTH_HEADER, String.format("%s %s", BEARER, details.getTokenValue()));
+					template.header(HttpHeaders.AUTHORIZATION, String.format("%s %s", BEARER, details.getTokenValue()));
 				}
 			} else {
 				AitLogger.warn(logger, "Null or unknown authentication type object: {}", auth);

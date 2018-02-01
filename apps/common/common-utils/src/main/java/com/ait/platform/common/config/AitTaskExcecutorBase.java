@@ -61,6 +61,8 @@ public abstract class AitTaskExcecutorBase implements ApplicationListener<Embedd
 		try {
 			serverPort = event.getEmbeddedServletContainer().getPort();
 			serverIp = AitLocalhostIpAddress.search().getHostAddress();
+			// se actualizan las tareas que han quedado en ejecucion (cuando se cierra el servidor mientras se estaba ejecutando la tarea)
+			taskSrv.updaTasks(serverIp, serverPort);
 		} catch (final UnknownHostException e) {
 			e.printStackTrace();
 		}

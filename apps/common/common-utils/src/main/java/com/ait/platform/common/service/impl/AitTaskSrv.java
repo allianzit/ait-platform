@@ -40,6 +40,11 @@ public class AitTaskSrv implements IAitTaskSrv {
 	public Collection<AitTask> getTasks(String serverIp, int serverPort) {
 		return taskRepository.listByServer(serverIp, serverPort);
 	}
+	@Override
+	@Transactional
+	public void updaTasks(String serverIp, int serverPort) {
+		taskRepository.updateByServerIpAndServerPort(serverIp, serverPort);
+	}
 
 	@Override
 	@Transactional

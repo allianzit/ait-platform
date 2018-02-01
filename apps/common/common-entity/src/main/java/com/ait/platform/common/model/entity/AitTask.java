@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -113,7 +114,9 @@ public class AitTask implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date nextExecDate;
 
-	@Column(name = "LAST_EXEC_MSG", nullable = false)
+	@Column(name = "LAST_EXEC_MSG", columnDefinition = "CLOB NOT NULL")
+	@Basic(optional = false)
+	@Lob
 	private String lastExecMsg;
 
 	@Column(name = "WAS_SUCCESSFUL", nullable = false)
