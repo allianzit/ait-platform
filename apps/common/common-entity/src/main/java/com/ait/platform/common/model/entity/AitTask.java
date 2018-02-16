@@ -115,7 +115,6 @@ public class AitTask implements Serializable {
 	private Date nextExecDate;
 
 	@Column(name = "LAST_EXEC_MSG", columnDefinition = "CLOB NOT NULL")
-	@Basic(optional = false)
 	@Lob
 	private String lastExecMsg;
 

@@ -35,14 +35,14 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+		<java.version>1.7</java.version>
 		<spring.admin.version>1.5.0</spring.admin.version>
 		<logstash.version>4.9</logstash.version>
 		<start-class>com.ait.platform.cloud.config.AitConfigServer</start-class>
 	</properties>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter</artifactId>
@@ -55,13 +55,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+
 		<!-- SVN config -->
 		<dependency>
 			<groupId>org.tmatesoft.svnkit</groupId>
 			<artifactId>svnkit</artifactId>
 		</dependency>
-		
+
 		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -74,7 +74,7 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- logging management -->
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
@@ -92,8 +92,8 @@
 			<scope>test</scope>
 		</dependency>
 
-		
-		
+
+
 	</dependencies>
 
 
@@ -109,6 +109,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

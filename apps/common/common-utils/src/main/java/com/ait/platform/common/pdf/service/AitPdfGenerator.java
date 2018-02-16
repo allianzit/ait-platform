@@ -214,8 +214,8 @@ public class AitPdfGenerator {
 				properties.setIncludePageNumber(false);
 				properties.setOrientation(AitPDFOrientation.PORTRAIT);
 				properties.setPageSize(AitPDFPageSize.LETTER);
-				properties.getAdditionalParams().add(new Param("-L", "20mm"));
-				properties.getAdditionalParams().add(new Param("-R", "20mm"));
+				properties.getAdditionalParams().add(new Param("-L", "30mm"));
+				properties.getAdditionalParams().add(new Param("-R", "30mm"));
 				properties.getAdditionalParams().add(new Param("-B", "40mm"));
 				byte[] data = AitPdfGenerator.createPdf(properties);
 

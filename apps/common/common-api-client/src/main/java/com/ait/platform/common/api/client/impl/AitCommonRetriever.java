@@ -15,6 +15,9 @@
  */
 package com.ait.platform.common.api.client.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +25,10 @@ import org.springframework.stereotype.Component;
 
 import com.ait.platform.common.api.client.IAitCommonRetriever;
 import com.ait.platform.common.logger.AitLogger;
+import com.ait.platform.common.model.vo.AitListOptionVO;
 import com.ait.platform.common.model.vo.AitParamVO;
 import com.ait.platform.common.model.vo.AitTaskEmailPivotVO;
+import com.ait.platform.common.model.vo.AitUserVO;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
@@ -37,6 +42,30 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	private static final Logger logger = LoggerFactory.getLogger(AitCommonRetriever.class);
 	@Autowired
 	private IAitCommonClient client;
+
+	@Override
+	@HystrixCommand(fallbackMethod = "errorOnGetUserById", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
+	public AitUserVO getUserById(Integer userId) {
+		AitLogger.debug(logger, "Searching user by id '{}'", userId);
+		try {
+			return client.getUserById(userId).getBody();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			return errorOnGetUserById(userId);
+		}
+	}
+
+	@Override
+	@HystrixCommand(fallbackMethod = "errorOnFindByListTypeAndFilter", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
+	public List<AitListOptionVO> findByListTypeAndFilter(String type, String filter) {
+		AitLogger.debug(logger, "Searching listOptions by type: {} and filter: '{}'", type, filter);
+		try {
+			return client.findByListTypeAndFilter(type, filter).getBody();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			return errorOnFindByListTypeAndFilter(type, filter);
+		}
+	}
 
 	@Override
 	@HystrixCommand(fallbackMethod = "errorOnGetAitParamByName", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
@@ -63,6 +92,16 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	}
 
 	/********************** On feign invocation error **************************/
+
+	public AitUserVO errorOnGetUserById(Integer userId) {
+		AitLogger.debug(logger, "Error trying to get user by id: {} ", userId);
+		return new AitUserVO();
+	}
+
+	public List<AitListOptionVO> errorOnFindByListTypeAndFilter(String type, String filter) {
+		AitLogger.debug(logger, "Error trying to get option list of type: {} with filter: '{}'", type, filter);
+		return new ArrayList<AitListOptionVO>();
+	}
 
 	public AitParamVO errorOnGetAitParamByName(String name) {
 		AitLogger.debug(logger, "Error trying to get the parameter by name: {}", name);

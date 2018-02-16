@@ -86,7 +86,6 @@ public class AitParam implements Serializable {
 	@Column(name = "NAME", nullable = false, length = 30)
 	private String name;
 
-	@Basic(optional = false)
 	@Column(name = "VAR_VALUE", columnDefinition = "CLOB NOT NULL")
 	@Lob
 	private String value;

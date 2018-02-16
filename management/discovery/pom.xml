@@ -146,6 +146,7 @@
 				</executions>
 				<configuration>
 					<addResources>false</addResources>
+					<executable>true</executable>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -15,8 +15,12 @@
  */
 package com.ait.platform.common.api.client;
 
+import java.util.List;
+
+import com.ait.platform.common.model.vo.AitListOptionVO;
 import com.ait.platform.common.model.vo.AitParamVO;
 import com.ait.platform.common.model.vo.AitTaskEmailPivotVO;
+import com.ait.platform.common.model.vo.AitUserVO;
 
 /**
  * @author AllianzIT
@@ -24,9 +28,12 @@ import com.ait.platform.common.model.vo.AitTaskEmailPivotVO;
  */
 public interface IAitCommonRetriever {
 
+	List<AitListOptionVO> findByListTypeAndFilter(final String type, final String filter);
 
 	AitParamVO getAitParamByName(final String name);
 
 	Boolean addEmailToQueue(final AitTaskEmailPivotVO email);
+
+	AitUserVO getUserById(Integer userId);
 
 }

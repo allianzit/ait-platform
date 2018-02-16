@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.platform.common.logger.AitLogger;
 import com.ait.platform.common.model.vo.AitParamVO;
+import com.ait.platform.common.model.vo.AitTaskEmailPivotVO;
+import com.ait.platform.common.model.vo.AitUserVO;
 import com.ait.platform.common.service.IAitParamSrv;
+import com.ait.platform.common.service.IAitTaskEmailPivotSrv;
+import com.ait.platform.common.service.IAitUserSrv;
 import com.ait.platform.common.util.AitApiBase;
 
 /**
@@ -36,19 +41,37 @@ import com.ait.platform.common.util.AitApiBase;
  *
  */
 @RestController
-@RequestMapping(value = "/internal/param/")
-public class AitInternalParamApi extends AitApiBase {
+@RequestMapping(value = "/internal/")
+public class AitInternalCommonApi extends AitApiBase {
 
-	private static final Logger logger = LoggerFactory.getLogger(AitInternalParamApi.class);
+	private static final Logger logger = LoggerFactory.getLogger(AitInternalCommonApi.class);
 
 	@Autowired
 	private IAitParamSrv paramSrv;
 
-	@RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Autowired
+	private IAitUserSrv userSrv;
+
+	@Autowired
+	private IAitTaskEmailPivotSrv emailSrv;
+
+	@RequestMapping(value = "email/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Boolean> addEmailToQueue(@RequestBody final AitTaskEmailPivotVO email) {
+		AitLogger.debug(logger, "Adding email. TO: {}, subject: {}", email.getEmailTo(), email.getEmailSubject());
+		return buildResponse(emailSrv.create(email));
+	}
+
+	@RequestMapping(value = "param/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<AitParamVO> getParamByName(@PathVariable final String name) {
 		AitLogger.debug(logger, "Searching parameter by name: {}", name);
 		return buildResponse(paramSrv.getVOByName(name));
 	}
 
+	@RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<AitUserVO> getUserById(@PathVariable Integer userId) {
+
+		return buildResponse(userSrv.getById(userId));
+	}
 }

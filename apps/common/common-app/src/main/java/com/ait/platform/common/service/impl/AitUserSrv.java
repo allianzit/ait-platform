@@ -127,4 +127,10 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 		return hasAuthority;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public AitUserVO getById(Integer userId) {
+		return convertAToB(userRepo.getOne(userId), new AitUserVO());
+	}
+
 }

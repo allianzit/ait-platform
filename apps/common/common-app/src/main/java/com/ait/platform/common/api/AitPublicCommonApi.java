@@ -17,8 +17,6 @@ package com.ait.platform.common.api;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +38,7 @@ import com.ait.platform.common.util.AitApiBase;
 @RequestMapping(value = "/public/")
 public class AitPublicCommonApi extends AitApiBase {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AitPublicCommonApi.class);
+//	private static final Logger LOGGER = LoggerFactory.getLogger(AitPublicCommonApi.class);
 
 	@Autowired
 	private IAitListOptionSrv listOptionSrv;

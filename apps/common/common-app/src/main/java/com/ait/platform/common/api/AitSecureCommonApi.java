@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -74,5 +75,11 @@ public class AitSecureCommonApi extends AitApiBase {
 		LOGGER.info("redirectUri: {}", redirectUri);
 
 		return buildResponse(appEnvironment);
+	}
+
+	@RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<AitUserVO> getUserById(@PathVariable Integer userId) {
+
+		return buildResponse(userSrv.getById(userId));
 	}
 }

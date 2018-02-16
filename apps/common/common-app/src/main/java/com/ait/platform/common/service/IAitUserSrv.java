@@ -24,4 +24,6 @@ public interface IAitUserSrv extends IAitSrv {
 
 	AitUserVO getUserVO();
 
+	AitUserVO getById(Integer userId);
+
 }
