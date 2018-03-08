@@ -24,6 +24,7 @@ public interface IAitEntity {
 	/**
 	 * Schema name
 	 */
+//	public final static String SCHEMA = "C##RTE";
 	public final static String SCHEMA = "AIT";
 
 	/**
@@ -44,6 +45,7 @@ public interface IAitEntity {
 	// Tables
 	public final static String REVISION_INFO = PREFIX + "REVISION_INFO";
 	public final static String USER = PREFIX + "USER";
+	public final static String USER_ATTIBUTE = PREFIX + "USER_ATTIBUTE";
 	public final static String PARAM = PREFIX + "PARAM";
 	public final static String MENU = PREFIX + "MENU";
 	public final static String LIST_TYPE = PREFIX + "LIST_TYPE";

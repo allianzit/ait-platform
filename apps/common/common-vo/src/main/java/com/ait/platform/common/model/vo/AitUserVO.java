@@ -16,6 +16,7 @@
 package com.ait.platform.common.model.vo;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -52,5 +53,6 @@ public class AitUserVO implements Serializable {
 	private String email;
 	private Set<String> roles = new TreeSet<>();
 	private HashSet<AitMenuVO> menu = new HashSet<>();
+	private HashMap<String, String> attributes = new HashMap<>();
 
 }

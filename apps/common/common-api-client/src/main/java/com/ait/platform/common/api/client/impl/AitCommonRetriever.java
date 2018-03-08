@@ -56,6 +56,18 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	}
 
 	@Override
+	@HystrixCommand(fallbackMethod = "errorOnGetUserByUsername", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
+	public AitUserVO getUserByUsername(String username) {
+		AitLogger.debug(logger, "Searching user by username '{}'", username);
+		try {
+			return client.getUserByUsername(username).getBody();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			return errorOnGetUserByUsername(username);
+		}
+	}
+
+	@Override
 	@HystrixCommand(fallbackMethod = "errorOnFindByListTypeAndFilter", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
 	public List<AitListOptionVO> findByListTypeAndFilter(String type, String filter) {
 		AitLogger.debug(logger, "Searching listOptions by type: {} and filter: '{}'", type, filter);
@@ -95,6 +107,11 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 
 	public AitUserVO errorOnGetUserById(Integer userId) {
 		AitLogger.debug(logger, "Error trying to get user by id: {} ", userId);
+		return new AitUserVO();
+	}
+
+	public AitUserVO errorOnGetUserByUsername(String username) {
+		AitLogger.debug(logger, "Error trying to get user by username: {} ", username);
 		return new AitUserVO();
 	}
 

@@ -79,7 +79,7 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/login", "/login/**", "**/public/**", "/ws-ait**").permitAll()//
+		http.authorizeRequests().antMatchers("/", "/login", "/login/**", "**/public/**", "/ws-ait**", "/ui/**", "/**/*.html", "/**/*.js", "/**/*.css", "/**/*.png", "/**/*.map", "/assets/*").permitAll()//
 				.anyRequest().authenticated()//
 				.and().exceptionHandling()//
 				.and().logout().logoutSuccessUrl("/").permitAll()//
@@ -90,7 +90,7 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 	// se ignora todo el path asociado a contenido estatico
 	@Override
 	public void configure(final WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/**/public/**", "/ws-ait**");
+		web.ignoring().antMatchers("**/public/**", "/ws-ait**", "/ui/**", "/**/*.html", "/**/*.js", "/**/*.css", "/**/*.png", "/**/*.map", "/assets/*");
 	}
 
 	@Bean
@@ -136,7 +136,7 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 	}
 
 	@RestController
-	public class Test {
+	public class ZuulApi {
 		@Autowired
 		OAuth2RestTemplate template;
 

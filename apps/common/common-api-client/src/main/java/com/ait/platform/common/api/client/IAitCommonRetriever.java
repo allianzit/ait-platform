@@ -36,4 +36,6 @@ public interface IAitCommonRetriever {
 
 	AitUserVO getUserById(Integer userId);
 
+	AitUserVO getUserByUsername(String username);
+
 }

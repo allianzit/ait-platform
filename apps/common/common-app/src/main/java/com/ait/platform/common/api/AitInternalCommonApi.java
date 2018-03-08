@@ -71,7 +71,11 @@ public class AitInternalCommonApi extends AitApiBase {
 
 	@RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<AitUserVO> getUserById(@PathVariable Integer userId) {
-
 		return buildResponse(userSrv.getById(userId));
+	}
+	
+	@RequestMapping(value = "user/byUsername/{username}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<AitUserVO> getUserById(@PathVariable String username) {
+		return buildResponse(userSrv.getByUsername(username));
 	}
 }

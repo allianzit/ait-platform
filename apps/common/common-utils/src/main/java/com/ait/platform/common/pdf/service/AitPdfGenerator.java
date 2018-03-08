@@ -11,11 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,9 +22,10 @@ import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.model.enums.pdf.AitPDFOrientation;
 import com.ait.platform.common.model.enums.pdf.AitPDFPageSize;
 import com.ait.platform.common.model.enums.pdf.EAitPdfOrigin;
+import com.ait.platform.common.pdf.model.vo.AitHtmlValueVO;
 import com.ait.platform.common.pdf.model.vo.AitPdfPageVO;
 import com.ait.platform.common.pdf.model.vo.AitPdfPropertiesVO;
-import com.ait.platform.common.pdf.model.vo.AitPdfValueVO;
+import com.ait.platform.common.util.AitStringUtils;
 import com.github.jhonnymertz.wkhtmltopdf.wrapper.Pdf;
 import com.github.jhonnymertz.wkhtmltopdf.wrapper.params.Param;
 
@@ -71,6 +70,11 @@ public class AitPdfGenerator {
 			pdf.addParam(new Param(ORIENTATION_PARAM, properties.getOrientation().getDescr()));
 			pdf.addParam(new Param(PAGE_SIZE_PARAM, properties.getPageSize().getDescr()));
 
+			// margenes por defecto
+			properties.getAdditionalParams().add(new Param("-L", "25mm"));
+			properties.getAdditionalParams().add(new Param("-R", "25mm"));
+			properties.getAdditionalParams().add(new Param("-B", "40mm"));
+
 			for (Param param : properties.getAdditionalParams()) {
 				pdf.addParam(param);
 			}
@@ -88,7 +92,7 @@ public class AitPdfGenerator {
 		return null;
 	}
 
-	private static String replaceContent(EAitPdfOrigin origin, String content, AitPdfValueVO values) {
+	private static String replaceContent(EAitPdfOrigin origin, String content, AitHtmlValueVO values) {
 		// read file into stream, try-with-resources
 		if (EAitPdfOrigin.FILE.equals(origin)) {
 			StringBuilder contentBuilder = new StringBuilder();
@@ -98,39 +102,9 @@ public class AitPdfGenerator {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return replaceContent(contentBuilder.toString(), values);
+			return AitStringUtils.replaceContent(contentBuilder.toString(), values);
 		}
-		return replaceContent(content, values);
-	}
-
-	private static String replaceContent(String content, AitPdfValueVO values) {
-		// valor simple
-		if (values.getValue() != null) {
-			String newValue = values.isEscapeHTML() ? StringEscapeUtils.escapeHtml4(values.getValue()) : values.getValue();
-			content = content.replaceAll("::" + values.getKey() + "::", Matcher.quoteReplacement(newValue));
-		}
-		// lista de valores
-		else if (values.getKey() != null) {
-			String tagEnd = "</" + values.getKey() + ">";
-			int begin = content.indexOf("<" + values.getKey() + ">");
-			int end = content.indexOf(tagEnd);
-			if (begin > -1 && end > -1) {
-				String listString = content.substring(begin, end + tagEnd.length());
-				String subContent = listString.substring(tagEnd.length() - 1, listString.length() - tagEnd.length() - 1);
-				StringBuffer listBuffer = new StringBuffer();
-				for (AitPdfValueVO value : values.getValues()) {
-					listBuffer.append(replaceContent(subContent, value));
-				}
-				content = content.replace(listString, listBuffer.toString());
-			}
-		}
-		// registro
-		else {
-			for (AitPdfValueVO value : values.getValues()) {
-				content = replaceContent(content, value);
-			}
-		}
-		return content;
+		return AitStringUtils.replaceContent(content, values);
 	}
 
 	private static void addPageParam(Pdf pdf, String paramName, boolean fromURL, String content) throws IOException {
@@ -172,7 +146,7 @@ public class AitPdfGenerator {
 				String name = "d:\\prueba" + id + ".pdf";
 				List<AitPdfPageVO> pages = new ArrayList<>();
 
-				AitPdfValueVO values = new AitPdfValueVO();
+				AitHtmlValueVO values = new AitHtmlValueVO();
 				AitPdfPageVO headerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, header, values);
 				headerPage.setHeader(true);
 				AitPdfPageVO footerPage = new AitPdfPageVO(EAitPdfOrigin.FILE, footer, values);
@@ -183,12 +157,12 @@ public class AitPdfGenerator {
 				values.addValue("motopartNIT", "321654654-8!!!");
 
 				// lista de motopartes
-				AitPdfValueVO rows = values.newList("motopartItem");
+				AitHtmlValueVO rows = values.newList("motopartItem");
 				for (int j = 0; j < 40; j++) {
 					int totalSupplies = new Random().nextInt(19);
 
 					// nuevo item motoparte
-					AitPdfValueVO row = rows.newListItem();
+					AitHtmlValueVO row = rows.newListItem();
 
 					// celdas de la fila
 					row.addValue("descMotopart", "descripción " + j);
@@ -197,9 +171,9 @@ public class AitPdfGenerator {
 					row.addValue("rowspan", "" + (totalSupplies + 1));
 
 					// lista de suministros de la motoparte
-					AitPdfValueVO supplies = row.newList("supplyItem");
+					AitHtmlValueVO supplies = row.newList("supplyItem");
 					for (int k = 0; k < totalSupplies; k++) {
-						AitPdfValueVO supply = supplies.newListItem();
+						AitHtmlValueVO supply = supplies.newListItem();
 						supply.addValue("subpartSupply", "32554-" + (k + 1));
 						supply.addValue("van", "111" + (k + 1) + " - " + totalSupplies);
 					}

@@ -42,13 +42,22 @@ public class AitPdfPageVO implements Serializable {
 
 	private static final long serialVersionUID = 7182235863687838588L;
 
+	// indica si la pagina corresponde a la cabecera
 	private boolean header = false;
-	private boolean footer = false;
-	private EAitPdfOrigin origin;
-	private String content;
-	private AitPdfValueVO values = new AitPdfValueVO();
 
-	public AitPdfPageVO(EAitPdfOrigin origin, String content, AitPdfValueVO values) {
+	// indica si la pagina corresponde a pie de pagina
+	private boolean footer = false;
+
+	// origen de la plantilla a usar: archivo, url o string
+	private EAitPdfOrigin origin;
+
+	// contenido como tal
+	private String content;
+
+	// valores a reemplazar en la plantilla
+	private AitHtmlValueVO values = new AitHtmlValueVO();
+
+	public AitPdfPageVO(EAitPdfOrigin origin, String content, AitHtmlValueVO values) {
 		super();
 		this.origin = origin;
 		this.content = content;

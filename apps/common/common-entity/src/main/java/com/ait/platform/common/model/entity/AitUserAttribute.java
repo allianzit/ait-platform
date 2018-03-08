@@ -16,17 +16,17 @@
 package com.ait.platform.common.model.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -51,7 +51,7 @@ import lombok.ToString;
  *
  */
 @Entity
-@Table(name = IAitEntity.USER, schema = IAitEntity.SCHEMA)
+@Table(name = IAitEntity.USER_ATTIBUTE, schema = IAitEntity.SCHEMA)
 @NoArgsConstructor(onConstructor = @__({ @JsonCreator }))
 @AllArgsConstructor
 @ToString(includeFieldNames = true)
@@ -60,9 +60,9 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@AuditTable(value = IAitEntity.USER + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
+@AuditTable(value = IAitEntity.USER_ATTIBUTE + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
 
-public class AitUser implements Serializable {
+public class AitUserAttribute implements Serializable {
 
 	/**
 	 * 
@@ -72,28 +72,17 @@ public class AitUser implements Serializable {
 	@Id
 	@Basic(optional = false)
 	@Column(name = "ID")
-	@SequenceGenerator(allocationSize = 1, name = IAitEntity.SEQ + IAitEntity.USER, sequenceName = IAitEntity.SEQ + IAitEntity.USER, initialValue = IAitEntity.FIRST_SEQ_VALUE, schema = IAitEntity.SCHEMA, catalog = IAitEntity.SCHEMA)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = IAitEntity.SEQ + IAitEntity.USER)
+	@SequenceGenerator(allocationSize = 1, name = IAitEntity.SEQ + IAitEntity.USER_ATTIBUTE, sequenceName = IAitEntity.SEQ + IAitEntity.USER_ATTIBUTE, initialValue = IAitEntity.FIRST_SEQ_VALUE, schema = IAitEntity.SCHEMA, catalog = IAitEntity.SCHEMA)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = IAitEntity.SEQ + IAitEntity.USER_ATTIBUTE)
 	private Integer id;
 
-	@Column(name = "IS_ENABLED", nullable = false, columnDefinition = "NUMBER (1) DEFAULT(1)")
-	private Boolean enabled = Boolean.TRUE;
+	@JoinColumn(name = "USER_ID", nullable = false, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_USER_ATT"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	private AitUser user;
 
-	@Column(name = "USERNAME", unique = true, nullable = false, columnDefinition = "VARCHAR2(80)")
-	private String username;
+	@Column(name = "ATT_KEY", nullable = false, columnDefinition = "VARCHAR2(30)")
+	private String key;
 
-	@Column(name = "FIRSTNAME", nullable = false, columnDefinition = "VARCHAR2(80)")
-	private String firstName;
-
-	@Column(name = "LASTTNAME", nullable = false, columnDefinition = "VARCHAR2(80)")
-	private String lastName;
-
-	@Column(name = "EMAIL", columnDefinition = "VARCHAR2(80)")
-	private String email;
-
-	@Column(name = "ROLES", columnDefinition = "VARCHAR2(4000)")
-	private String userRoles;
-
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<AitUserAttribute> attributes;
+	@Column(name = "ATT_VALUE", nullable = false, columnDefinition = "VARCHAR2(128)")
+	private String value;
 }

@@ -11,10 +11,18 @@ import lombok.Data;
 
 @Data
 public class AitPdfPropertiesVO {
+	//incluir numero de pagina en cada hoja
 	private boolean includePageNumber = true;
-	private AitPDFOrientation orientation = AitPDFOrientation.PORTRAIT;
+	
+	//tipo y orientacion por defecto 
 	private AitPDFPageSize pageSize = AitPDFPageSize.LETTER;
-	private List<AitPdfPageVO> pages = new ArrayList<>();
+	private AitPDFOrientation orientation = AitPDFOrientation.PORTRAIT;
+
+	//parametros adicionales de configuracion del PDF
 	private List<Param> additionalParams = new ArrayList<>();
+
+	//Informacion de cada pagina del PDF, incluyendo cabecera y pie
+	private List<AitPdfPageVO> pages = new ArrayList<>();
+	
 
 }

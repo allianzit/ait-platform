@@ -15,7 +15,9 @@
  */
 package com.ait.platform.common.service.impl;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ait.platform.common.model.entity.AitMenu;
 import com.ait.platform.common.model.entity.AitUser;
+import com.ait.platform.common.model.entity.AitUserAttribute;
 import com.ait.platform.common.model.vo.AitMenuVO;
 import com.ait.platform.common.model.vo.AitUserVO;
 import com.ait.platform.common.repository.IAitMenuRepo;
@@ -47,6 +50,9 @@ import com.ait.platform.common.service.IAitUserSrv;
 public class AitUserSrv extends AitSrv implements IAitUserSrv {
 
 	private static final Logger logger = LoggerFactory.getLogger(AitUserSrv.class);
+
+	private static List<String> attributes = Arrays.asList("given_name", "family_name", "email", "name", "preferred_username", "authorities");
+
 	@Autowired
 	private IAitUserRepo userRepo;
 
@@ -72,11 +78,23 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 			user.setFirstName(details.get("given_name"));
 			user.setLastName(details.get("family_name"));
 			user.setEmail(details.get("email"));
+			user.setAttributes(new HashSet<>());
 			user.setEnabled(true);
 		}
 		AitUserVO userVO = new AitUserVO();
 		try {
 			BeanUtils.copyProperties(user, userVO);
+
+			// se leen los atributos adicionales del usuario provenientes de keycloak
+			for (String key : details.keySet()) {
+				// si es un atributo diferente a los basicos
+				if (!attributes.contains(key)) {
+					AitUserAttribute att = getAttribute(user, key);
+					att.setValue(details.get(key));
+					userVO.getAttributes().put(key, att.getValue());
+				}
+			}
+
 			SecurityContextHolder.getContext().getAuthentication();
 			// se crea el menu del usuario
 			Collection<GrantedAuthority> authorities = principal.getAuthorities();
@@ -102,6 +120,18 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 			e.printStackTrace();
 		}
 		return userVO;
+	}
+
+	private AitUserAttribute getAttribute(AitUser user, String key) {
+		for (AitUserAttribute att : user.getAttributes()) {
+			if (att.getKey().equals(key)) {
+				return att;
+			}
+		}
+		// si no existe, se agrega
+		AitUserAttribute att = new AitUserAttribute(null, user, key, "");
+		user.getAttributes().add(att);
+		return att;
 	}
 
 	private boolean hasAuthority(AitMenuVO opc, Set<AitMenu> children, Collection<GrantedAuthority> authorities) {
@@ -130,7 +160,24 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 	@Override
 	@Transactional(readOnly = true)
 	public AitUserVO getById(Integer userId) {
-		return convertAToB(userRepo.getOne(userId), new AitUserVO());
+		return buildVO(userRepo.getOne(userId));
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public AitUserVO getByUsername(String username) {
+		return buildVO(userRepo.getByUsername(username));
+	}
+
+	private AitUserVO buildVO(AitUser user) {
+		if (user != null) {
+			AitUserVO vo = convertAToB(user, new AitUserVO());
+			// se leen los atributos adicionales del usuario provenientes de keycloak
+			for (AitUserAttribute att : user.getAttributes()) {
+				vo.getAttributes().put(att.getKey(), att.getValue());
+			}
+			return vo;
+		}
+		return null;
+	}
 }

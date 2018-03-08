@@ -55,4 +55,8 @@ interface IAitCommonClient {
 	@ResponseBody
 	public ResponseEntity<AitUserVO> getUserById(@PathVariable("userId") Integer userId);
 
+	@RequestMapping(value = "/internal/user/byUsername/{username}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<AitUserVO> getUserByUsername(@PathVariable("username") String username);
+
 }

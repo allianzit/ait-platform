@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.ait.platform.common.constants.IAitConstants;
 import com.ait.platform.common.exception.AitException;
@@ -65,7 +66,7 @@ public class AitMailSenderSrv implements IAitMailSenderSrv {
 
 			helper.setTo(mail.getEmailTo());
 
-			if (!mail.getEmailCC().isEmpty()) {
+			if (!StringUtils.isEmpty(mail.getEmailCC())) {
 				String[] ccList = mail.getEmailCC().split(",");
 				helper.setCc(ccList);
 			}
