@@ -73,7 +73,7 @@ public class AitPdfGenerator {
 			// margenes por defecto
 			properties.getAdditionalParams().add(new Param("-L", "25mm"));
 			properties.getAdditionalParams().add(new Param("-R", "25mm"));
-			properties.getAdditionalParams().add(new Param("-B", "40mm"));
+//			properties.getAdditionalParams().add(new Param("-B", "40mm"));
 
 			for (Param param : properties.getAdditionalParams()) {
 				pdf.addParam(param);

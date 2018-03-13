@@ -15,7 +15,10 @@
  */
 package com.ait.platform.common.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -29,5 +32,8 @@ import com.ait.platform.common.model.entity.AitUser;
 public interface IAitUserRepo extends RevisionRepository<AitUser, Integer, Integer>, JpaRepository<AitUser, Integer> {
 
 	AitUser getByUsername(String username);
+
+	@Query("SELECT u FROM AitUser u WHERE u.userRoles like ?1")
+	List<AitUser> findByRole(String role);
 
 }

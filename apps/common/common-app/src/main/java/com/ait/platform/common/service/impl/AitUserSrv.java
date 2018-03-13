@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,12 +78,12 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 			user.setUsername(username);
 			user.setFirstName(details.get("given_name"));
 			user.setLastName(details.get("family_name"));
-			user.setEmail(details.get("email"));
 			user.setAttributes(new HashSet<>());
 			user.setEnabled(true);
 		}
 		AitUserVO userVO = new AitUserVO();
 		try {
+			user.setEmail(details.get("email"));
 			BeanUtils.copyProperties(user, userVO);
 
 			// se leen los atributos adicionales del usuario provenientes de keycloak
@@ -167,6 +168,12 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 	@Transactional(readOnly = true)
 	public AitUserVO getByUsername(String username) {
 		return buildVO(userRepo.getByUsername(username));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<AitUserVO> getByRole(String role) {
+		return userRepo.findByRole("%," + role + ",%").stream().map(opt -> convertAToB(opt, new AitUserVO())).collect(Collectors.toList());
 	}
 
 	private AitUserVO buildVO(AitUser user) {

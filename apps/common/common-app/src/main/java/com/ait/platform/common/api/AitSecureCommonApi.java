@@ -15,6 +15,8 @@
  */
 package com.ait.platform.common.api;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -79,7 +81,11 @@ public class AitSecureCommonApi extends AitApiBase {
 
 	@RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<AitUserVO> getUserById(@PathVariable Integer userId) {
-
 		return buildResponse(userSrv.getById(userId));
+	}
+
+	@RequestMapping(value = "user/byRole/{role}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<List<AitUserVO>> getUsersByRole(@PathVariable String role) {
+		return buildResponse(userSrv.getByRole(role));
 	}
 }

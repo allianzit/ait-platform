@@ -13,16 +13,11 @@ public class AitHtmlValueVO {
 	private List<AitHtmlValueVO> values = new ArrayList<>();
 
 	public void addValue(String key, String value) {
-		// addValue(key, value, true);
-		// }
-		//
-		// public void addValue(String key, String value, boolean escapeHTML) {
 		AitHtmlValueVO vo = new AitHtmlValueVO();
 		vo.key = key;
 		vo.value = value;
 		vo.escapeHTML = true;
 		values.add(vo);
-
 	}
 
 	public AitHtmlValueVO newList(String tag) {

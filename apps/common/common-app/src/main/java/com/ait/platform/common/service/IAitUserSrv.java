@@ -14,6 +14,8 @@
  * limitations under the License.
  */package com.ait.platform.common.service;
 
+import java.util.List;
+
 import com.ait.platform.common.model.vo.AitUserVO;
 
 /**
@@ -26,6 +28,9 @@ public interface IAitUserSrv extends IAitSrv {
 
 	AitUserVO getById(Integer userId);
 
+
 	AitUserVO getByUsername(String username);
+
+	List<AitUserVO> getByRole(String role);
 
 }

@@ -55,7 +55,6 @@ public class AitStringUtils {
 	public static final String LIST_END = "</";
 
 	private AitStringUtils() {
-
 	}
 
 	public static String removeSpaces(final String str) {
@@ -65,69 +64,6 @@ public class AitStringUtils {
 	public static boolean isEmpty(final Object str) {
 		return str == null || str.toString().trim().isEmpty();
 	}
-
-	// public static String processTemplate(final File file, final Map<String, String> parameters) {
-	// final String template = readFile(file).toString();
-	// return processTemplate(template, parameters);
-	// }
-	//
-	// public static String processTemplate(final String template, final Map<String, String> parameters) {
-	// String ret = template;
-	// for (final String key : parameters.keySet()) {
-	// if (parameters.get(key) != null) {
-	// ret = ret.replaceAll(PROPERY_HOLDER + key + PROPERY_HOLDER, parameters.get(key));
-	// }
-	// }
-	// AitLogger.debug(logger, "Retorno processTemplate " + ret);
-	// return ret;
-	// }
-
-	// public static StringBuffer readFile(final File template) {
-	// BufferedReader br = null;
-	// final StringBuffer buf = new StringBuffer();
-	//
-	// try {
-	//
-	// String sCurrentLine;
-	// final InputStream inStream = new FileInputStream(template);
-	// br = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
-	//
-	// while ((sCurrentLine = br.readLine()) != null) {
-	// buf.append(sCurrentLine);
-	// }
-	//
-	// } catch (final IOException e) {
-	// e.printStackTrace();
-	// } finally {
-	// try {
-	// if (br != null) {
-	// br.close();
-	// }
-	// } catch (final IOException ex) {
-	// ex.printStackTrace();
-	// }
-	// }
-	// return buf;
-	// }
-	//
-	// public static Map<String, String> getParamsFromTemplate(String template, Object obj) {
-	// final Map<String, String> parameters = new HashMap<>();
-	// // cada parametro tiene el siguiente formato: :@campo$$campoHijo$$campoNieto$$$floatValue@:
-	// // (si se ponen 3 signos pesos $$$ quiere decir que el metodo a invocar NO se le debe anteponer la palabra 'get' ni convertir la primer letra a mayusculas)
-	// // para datos tipo java.util.Date que requieran formato: ::campo.campoHijo#yyyy-MM-dd:: (lo ubicado despues del # corresponde al formato deseado)
-	// Pattern pattern = Pattern.compile(PROPERY_HOLDER + "(.*?)" + PROPERY_HOLDER);
-	//
-	// Matcher matcher = pattern.matcher(template);
-	// while (matcher.find()) {
-	// try {
-	// String value = getValue(obj, matcher.group(1)).toString();
-	// parameters.put(matcher.group(1), isEmpty(value) ? "" : value);
-	// } catch (IllegalArgumentException | NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// return parameters;
-	// }
 
 	private static Object getValue(Object obj, String method) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		String[] data = method.split(FORMAT_SEPARATOR);
@@ -140,8 +76,24 @@ public class AitStringUtils {
 			Object val = obj.getClass().getMethod("get" + var.substring(0, 1).toUpperCase() + var.substring(1)).invoke(obj);
 			return getValue(val, method.substring(idx + 2));
 		}
-		String methodName = data[0].startsWith(NO_GET_METHOD) ? data[0].substring(1) : "get" + data[0].substring(0, 1).toUpperCase() + data[0].substring(1);
-		Object value = obj.getClass().getMethod(methodName).invoke(obj);
+		Object value = null;
+		String methodName = "";
+		if (data[0].startsWith(NO_GET_METHOD)) {
+			if (data[0].contains("(")) {
+				data[0] = data[0].replaceAll(")", "");
+				data[0] = data[0].replaceAll("(", "_");
+				String[] sData = data[0].split("_");
+				methodName = sData[0];
+				// de momento solo invoca metodos que reciben un solo string Ej: getPropert("nombre");
+				value = obj.getClass().getMethod(methodName).invoke(obj, sData[1]/* .split(",") */);
+			} else {
+				methodName = data[0].substring(1);
+				value = obj.getClass().getMethod(methodName).invoke(obj);
+			}
+		} else {
+			methodName = "get" + data[0].substring(0, 1).toUpperCase() + data[0].substring(1);
+			value = obj.getClass().getMethod(methodName).invoke(obj);
+		}
 		if (data.length > 1) {
 			// si el valor es nulo, se retorna el valor por defecto (si se definió) o una cadena vacia según sea el caso
 			if (value == null) {
@@ -157,11 +109,11 @@ public class AitStringUtils {
 				return String.format(data[1], value);
 			}
 		}
-		return value;
+		return value == null ? "" : value;
 	}
 
 	public static AitHtmlValueVO getValuesFromTemplate(final AitHtmlValueVO values, String template, Object obj) {
-		// cada parametro tiene el siguiente formato: :@campo$$campoHijo$$campoNieto$$$floatValue@:
+		// cada parametro tiene el siguiente formato: ::campo__campoHijo__campoNieto___getProperty(nombre)___floatValue::
 		// (si se ponen 3 signos pesos $$$ quiere decir que el metodo a invocar NO se le debe anteponer la palabra 'get' ni convertir la primer letra a mayusculas)
 		// para datos tipo java.util.Date que requieran formato: ::campo.campoHijo#yyyy-MM-dd:: (lo ubicado despues del # corresponde al formato deseado)
 		Pattern pattern = Pattern.compile(PROPERY_HOLDER + "(.*?)" + PROPERY_HOLDER);
@@ -197,7 +149,7 @@ public class AitStringUtils {
 				} else {// de lo contrario, se asume que es de tipo propiedad
 					values.addValue(property, getValue(obj, property).toString());
 				}
-			} catch (IllegalArgumentException | NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
+			} catch (Exception e) {
 				logger.error("Error obteniendo valor para la propiedad {0}, Excepcion: {1} ", property, e.getMessage());
 				e.printStackTrace();
 			}
