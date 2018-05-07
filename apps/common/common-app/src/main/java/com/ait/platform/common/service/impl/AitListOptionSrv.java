@@ -18,8 +18,6 @@ package com.ait.platform.common.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,7 +35,7 @@ import com.ait.platform.common.service.IAitListOptionSrv;
 @Transactional
 public class AitListOptionSrv extends AitSrv implements IAitListOptionSrv {
 
-	private static final Logger logger = LoggerFactory.getLogger(AitListOptionSrv.class);
+	// private static final Logger logger = LoggerFactory.getLogger(AitListOptionSrv.class);
 
 	@Autowired
 	private IAitListOptionRepo listOptionRepo;
@@ -45,7 +43,8 @@ public class AitListOptionSrv extends AitSrv implements IAitListOptionSrv {
 	@Override
 	@Transactional(readOnly = true)
 	public List<AitListOptionVO> findByListTypeAndFilter(String listType, String filter) {
-		return listOptionRepo.findByListTypeAndFilter(listType, "%" + filter + "%", new PageRequest(0, 10)).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
+		// return listOptionRepo.findByListTypeAndFilter(listType, "%" + filter + "%", new PageRequest(0, 10)).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
+		return listOptionRepo.findByListTypeAndFilter(listType, filter + "%", new PageRequest(0, 10)).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
 	}
 
 }
