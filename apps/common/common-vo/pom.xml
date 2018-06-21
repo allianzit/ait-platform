@@ -57,6 +57,12 @@
 			<artifactId>java-wkhtmltopdf-wrapper</artifactId>
 			<version>1.0.2-RELEASE</version>
 		</dependency>
+		<!-- Manejo de SCV -->
+		<dependency>
+			<groupId>net.sf.jsefa</groupId>
+			<artifactId>jsefa</artifactId>
+			<version>1.1.0.RELEASE</version>
+		</dependency>
 	</dependencies>
 
 	<build>

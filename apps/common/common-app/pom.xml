@@ -181,19 +181,6 @@
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>${resteasy.version}</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.jboss.resteasy</groupId> -->
-		<!-- <artifactId>resteasy-multipart-provider</artifactId> -->
-		<!-- <version>${resteasy.version}</version> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.jhades</groupId> -->
-		<!-- <artifactId>jhades</artifactId> -->
-		<!-- <version>1.0.4</version> -->
-		<!-- </dependency> -->
-
-
-
 	</dependencies>
 
 	<build>

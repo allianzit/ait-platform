@@ -59,4 +59,8 @@ interface IAitCommonClient {
 	@ResponseBody
 	public ResponseEntity<AitUserVO> getUserByUsername(@PathVariable("username") String username);
 
+	@RequestMapping(value = "/secure/user", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	ResponseEntity<AitUserVO> saveUser(@RequestBody AitUserVO user);
+
 }

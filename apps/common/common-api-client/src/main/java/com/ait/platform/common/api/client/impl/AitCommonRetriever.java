@@ -42,6 +42,18 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	private static final Logger logger = LoggerFactory.getLogger(AitCommonRetriever.class);
 	@Autowired
 	private IAitCommonClient client;
+	
+	@Override
+	@HystrixCommand(fallbackMethod = "errorOnSaveUser", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
+	public AitUserVO saveUser(AitUserVO user) {
+		AitLogger.debug(logger, "Saving user '{}'", user);
+		try {
+			return client.saveUser(user).getBody();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			return errorOnSaveUser(user);
+		}
+	}
 
 	@Override
 	@HystrixCommand(fallbackMethod = "errorOnGetUserById", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
@@ -104,6 +116,11 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	}
 
 	/********************** On feign invocation error **************************/
+	
+	public AitUserVO errorOnSaveUser(AitUserVO user) {
+		AitLogger.debug(logger, "Error trying to save user: {} ", user);
+		return user;
+	}
 
 	public AitUserVO errorOnGetUserById(Integer userId) {
 		AitLogger.debug(logger, "Error trying to get user by id: {} ", userId);

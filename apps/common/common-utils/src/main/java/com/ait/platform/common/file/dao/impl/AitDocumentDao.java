@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -49,6 +51,7 @@ public class AitDocumentDao implements IAitDocumentDao {
 
 	private static final String THUMBNAIL = "thumbnail.png";
 	private static final int THUMBNAIL_WIDTH = 96;
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 	@PostConstruct
 	public void init() {
@@ -242,12 +245,14 @@ public class AitDocumentDao implements IAitDocumentDao {
 	}
 
 	private String getDirectoryPath(final AitDocumentMetadataVO metadata) {
+		String group = sdf.format(new Date());
+		metadata.setUuid(group + metadata.getUuid());
 		return getDirectoryPath(metadata.getSubfolder(), metadata.getUuid());
 	}
 
 	private String getDirectoryPath(String subFolder, String uuid) {
-		final StringBuilder sb = new StringBuilder();
-		sb.append(this.DOCS_DIRECTORY).append(subFolder).append(IAitConstants.SEPARATOR).append(uuid);
+		final StringBuilder sb = new StringBuilder();		
+		sb.append(this.DOCS_DIRECTORY).append(uuid.substring(0,8)).append(IAitConstants.SEPARATOR).append(subFolder).append(IAitConstants.SEPARATOR).append(uuid.substring(8));
 		return sb.toString();
 	}
 

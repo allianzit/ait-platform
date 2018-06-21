@@ -12,32 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package com.ait.platform.common.api.client;
+ */package com.ait.platform.common.service;
 
-import java.util.List;
-
-import com.ait.platform.common.model.vo.AitListOptionVO;
-import com.ait.platform.common.model.vo.AitParamVO;
-import com.ait.platform.common.model.vo.AitTaskEmailPivotVO;
 import com.ait.platform.common.model.vo.AitUserVO;
 
 /**
  * @author AllianzIT
  *
  */
-public interface IAitCommonRetriever {
+public interface IAitKeycloakSrv {
 
-	AitUserVO saveUser(AitUserVO user) ;
-	
-	List<AitListOptionVO> findByListTypeAndFilter(final String type, final String filter);
+	String createUser(AitUserVO vo);
 
-	AitParamVO getAitParamByName(final String name);
+	void updateUser(AitUserVO vo);
 
-	Boolean addEmailToQueue(final AitTaskEmailPivotVO email);
+	void deleteUserById(String userId);
 
-	AitUserVO getUserById(Integer userId);
-
-	AitUserVO getUserByUsername(String username);
+	void resetPwd(String userId);
 
 }

@@ -63,6 +63,12 @@ public class AitSecureCommonApi extends AitApiBase {
 		return buildResponse(userSrv.getUserVO());
 	}
 
+	@RequestMapping(value = "user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<AitUserVO> saveUser(AitUserVO user) {
+		return buildResponse(userSrv.saveUser(user));
+	}
+
 	@RequestMapping(value = "portalConfig", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<AitEnvironmentVO> appConfig(HttpServletRequest request) {
 		LOGGER.debug("Getting Keycloak Server Configuration");

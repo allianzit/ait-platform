@@ -16,6 +16,7 @@
 package com.ait.platform.common.model.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -95,5 +96,5 @@ public class AitUser implements Serializable {
 	private String userRoles;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<AitUserAttribute> attributes;
+	private Set<AitUserAttribute> attributes = new HashSet<>();
 }

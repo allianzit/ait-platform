@@ -179,7 +179,7 @@
 		<dependency>
 			<groupId>com.github.mthizo247</groupId>
 			<artifactId>spring-cloud-netflix-zuul-websocket</artifactId>
-			<version>1.0.3.RELEASE</version>
+			<version>1.0.7.RELEASE</version>
 		</dependency>
 
 		<dependency>

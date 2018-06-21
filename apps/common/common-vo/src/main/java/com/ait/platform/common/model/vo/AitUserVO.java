@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -31,6 +32,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.sf.jsefa.csv.annotation.CsvDataType;
+import net.sf.jsefa.csv.annotation.CsvField;
 
 /**
  * @author AllianzIT
@@ -43,16 +46,27 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@CsvDataType()
 public class AitUserVO implements Serializable {
 
 	private static final long serialVersionUID = 5436508884567227048L;
+	@CsvField(pos = 1)
 	private Integer id;
+	@CsvField(pos = 2)
 	private String username;
+	@CsvField(pos = 3)
 	private String firstName;
+
 	private String lastName;
+	@CsvField(pos = 4)
 	private String email;
+	private Boolean enabled = Boolean.TRUE;
 	private Set<String> roles = new TreeSet<>();
 	private HashSet<AitMenuVO> menu = new HashSet<>();
 	private HashMap<String, String> attributes = new HashMap<>();
+
+	@JsonIgnore
+	@CsvField(pos = 5)
+	private String rolesString;
 
 }

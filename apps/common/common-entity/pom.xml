@@ -48,7 +48,7 @@
 			<artifactId>spring-data-envers</artifactId>
 			<version>${spring.data.envers.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
@@ -65,7 +65,6 @@
 			<artifactId>common-vo</artifactId>
 			<version>${version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>

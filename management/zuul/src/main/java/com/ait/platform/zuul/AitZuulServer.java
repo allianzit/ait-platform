@@ -51,7 +51,6 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 import com.ait.platform.zuul.config.AitOAuth2BearerPrincipalHeadersCallback;
-import com.github.mthizo247.cloud.netflix.zuul.web.socket.EnableZuulWebSocket;
 import com.github.mthizo247.cloud.netflix.zuul.web.socket.WebSocketHttpHeadersCallback;
 
 import lombok.AllArgsConstructor;
@@ -66,9 +65,8 @@ import lombok.Data;
 @EnableZuulProxy
 @EnableOAuth2Sso
 @EnableEurekaClient
-@EnableZuulWebSocket
-@RestController
 @EnableWebSocketMessageBroker
+@RestController
 @ComponentScan({ "com.ait.platform.zuul" })
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class AitZuulServer extends WebSecurityConfigurerAdapter {

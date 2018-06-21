@@ -27,7 +27,7 @@ public class AitWebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/ws-ait").setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint("/ws-ait").setAllowedOrigins("*").withSockJS().setClientLibraryUrl("https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js");
 	}
 
 }

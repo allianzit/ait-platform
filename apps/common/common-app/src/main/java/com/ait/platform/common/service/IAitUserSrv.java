@@ -24,10 +24,11 @@ import com.ait.platform.common.model.vo.AitUserVO;
  */
 public interface IAitUserSrv extends IAitSrv {
 
+	AitUserVO saveUser(AitUserVO user);
+
 	AitUserVO getUserVO();
 
 	AitUserVO getById(Integer userId);
-
 
 	AitUserVO getByUsername(String username);
 

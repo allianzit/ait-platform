@@ -17,6 +17,7 @@ package com.ait.platform.common.service.impl;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import com.ait.platform.common.model.vo.AitMenuVO;
 import com.ait.platform.common.model.vo.AitUserVO;
 import com.ait.platform.common.repository.IAitMenuRepo;
 import com.ait.platform.common.repository.IAitUserRepo;
+import com.ait.platform.common.service.IAitKeycloakSrv;
 import com.ait.platform.common.service.IAitUserSrv;
 
 /**
@@ -59,6 +61,31 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 
 	@Autowired
 	private IAitMenuRepo menuRepo;
+
+	@Autowired
+	private IAitKeycloakSrv keycloakSrv;
+
+	@Override
+	@Transactional
+	public AitUserVO saveUser(AitUserVO vo) {
+		HashMap<String, String> atts = vo.getAttributes();
+
+		boolean isNew = vo.getId() == null;
+		if (isNew) {// si es nuevo, se crea el usuario
+			atts.put("sub", keycloakSrv.createUser(vo));
+		} else {// se actualiza el usuario
+			keycloakSrv.updateUser(vo);
+		}
+		AitUser user = new AitUser();
+		BeanUtils.copyProperties(vo, user);
+
+		userRepo.save(user);
+
+		for (String key : atts.keySet()) {
+			user.getAttributes().add(new AitUserAttribute(null, user, key, atts.get(key)));
+		}
+		return buildVO(user);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -65,7 +65,6 @@ public class AitMailSenderSrv implements IAitMailSenderSrv {
 			message.setSentDate(AitDateUtils.getCurrentDate());
 
 			helper.setTo(mail.getEmailTo());
-
 			if (!StringUtils.isEmpty(mail.getEmailCC())) {
 				String[] ccList = mail.getEmailCC().split(",");
 				helper.setCc(ccList);
