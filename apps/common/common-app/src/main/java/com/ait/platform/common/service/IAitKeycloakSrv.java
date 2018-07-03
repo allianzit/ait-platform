@@ -22,7 +22,7 @@ import com.ait.platform.common.model.vo.AitUserVO;
  */
 public interface IAitKeycloakSrv {
 
-	String createUser(AitUserVO vo);
+	String createUser(AitUserVO vo, boolean update);
 
 	void updateUser(AitUserVO vo);
 

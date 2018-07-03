@@ -15,6 +15,7 @@
  */
 package com.ait.platform.common.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.ait.platform.common.model.entity.AitMenu;
 import com.ait.platform.common.model.entity.AitUser;
@@ -41,7 +43,6 @@ import com.ait.platform.common.model.vo.AitMenuVO;
 import com.ait.platform.common.model.vo.AitUserVO;
 import com.ait.platform.common.repository.IAitMenuRepo;
 import com.ait.platform.common.repository.IAitUserRepo;
-import com.ait.platform.common.service.IAitKeycloakSrv;
 import com.ait.platform.common.service.IAitUserSrv;
 
 /**
@@ -62,23 +63,14 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 	@Autowired
 	private IAitMenuRepo menuRepo;
 
-	@Autowired
-	private IAitKeycloakSrv keycloakSrv;
-
 	@Override
 	@Transactional
 	public AitUserVO saveUser(AitUserVO vo) {
 		HashMap<String, String> atts = vo.getAttributes();
 
-		boolean isNew = vo.getId() == null;
-		if (isNew) {// si es nuevo, se crea el usuario
-			atts.put("sub", keycloakSrv.createUser(vo));
-		} else {// se actualiza el usuario
-			keycloakSrv.updateUser(vo);
-		}
 		AitUser user = new AitUser();
 		BeanUtils.copyProperties(vo, user);
-
+		user.setUserRoles("," + String.join(",", vo.getRoles()) + ",");
 		userRepo.save(user);
 
 		for (String key : atts.keySet()) {
@@ -199,8 +191,38 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<AitUserVO> getByRole(String role) {
-		return userRepo.findByRole("%," + role + ",%").stream().map(opt -> convertAToB(opt, new AitUserVO())).collect(Collectors.toList());
+	public List<AitUserVO> getByRoles(String[] roles) {
+		List<AitUser> list = new ArrayList<>();
+		List<Integer> ids = new ArrayList<>();
+		for (String role : roles) {
+			List<AitUser> subList = userRepo.findByEnabledTrueAndUserRolesLike("%," + role + ",%");
+			// se evita enviar usuarios repetidos
+			for (AitUser user : subList) {
+				if (!ids.contains(user.getId())) {
+					ids.add(user.getId());
+					list.add(user);
+				}
+			}
+		}
+		return list.stream().map(opt -> convertAToB(opt, new AitUserVO())).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<AitUserVO> getAll() {
+		return userRepo.findAll().stream().map(opt -> {
+			AitUserVO user = new AitUserVO();
+			convertAToB(opt, user);
+			user.setAttributes(new HashMap<>());
+			for (AitUserAttribute att : opt.getAttributes()) {
+				user.getAttributes().put(att.getKey(), att.getValue());
+			}
+			if (!StringUtils.isEmpty(opt.getUserRoles())) {
+				opt.getUserRoles().replaceAll(",,", ",");
+				user.setRoles(new HashSet<>(Arrays.asList(opt.getUserRoles().split("\\s*,\\s*"))));
+			}
+			return user;
+		}).collect(Collectors.toList());
 	}
 
 	private AitUserVO buildVO(AitUser user) {

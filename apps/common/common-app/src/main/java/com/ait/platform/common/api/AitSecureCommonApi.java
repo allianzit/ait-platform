@@ -15,6 +15,7 @@
  */
 package com.ait.platform.common.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,17 +24,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.model.vo.AitEnvironmentVO;
 import com.ait.platform.common.model.vo.AitParamVO;
 import com.ait.platform.common.model.vo.AitUserVO;
+import com.ait.platform.common.service.IAitKeycloakSrv;
 import com.ait.platform.common.service.IAitParamSrv;
 import com.ait.platform.common.service.IAitUserSrv;
 import com.ait.platform.common.util.AitApiBase;
@@ -57,6 +63,9 @@ public class AitSecureCommonApi extends AitApiBase {
 	@Autowired
 	private IAitUserSrv userSrv;
 
+	@Autowired
+	private IAitKeycloakSrv keycloakSrv;
+
 	@RequestMapping(value = "me", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<AitUserVO> me() {
@@ -65,8 +74,28 @@ public class AitSecureCommonApi extends AitApiBase {
 
 	@RequestMapping(value = "user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<AitUserVO> saveUser(AitUserVO user) {
-		return buildResponse(userSrv.saveUser(user));
+	public ResponseEntity<AitUserVO> saveUser(@RequestBody AitUserVO vo, @RequestParam boolean updateKeycloakIfExist) {
+		String keycloakId = null;
+		HashMap<String, String> atts = vo.getAttributes();
+
+		boolean isNew = vo.getId() == null;
+		if (isNew) {// si es nuevo, se crea el usuario
+			keycloakId = keycloakSrv.createUser(vo, updateKeycloakIfExist);
+			if (keycloakId != null) {// si es un usuario recien creado
+				atts.put("sub", keycloakId);
+			}
+		} else {// se actualiza el usuario
+			keycloakSrv.updateUser(vo);
+		}
+		try {
+			return buildResponse(userSrv.saveUser(vo));
+		} catch (Exception e) {
+			if (isNew && keycloakId != null) {
+				keycloakSrv.deleteUserById(keycloakId);
+			}
+			throw new AitException(HttpStatus.BAD_REQUEST, "Error al crear el usuario", "Ocurrió un error creando el usuario, verifique que no exista otro usuario con el mismo nombre de usuario");
+		}
+
 	}
 
 	@RequestMapping(value = "portalConfig", method = RequestMethod.GET)
@@ -90,8 +119,13 @@ public class AitSecureCommonApi extends AitApiBase {
 		return buildResponse(userSrv.getById(userId));
 	}
 
-	@RequestMapping(value = "user/byRole/{role}", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<List<AitUserVO>> getUsersByRole(@PathVariable String role) {
-		return buildResponse(userSrv.getByRole(role));
+	@RequestMapping(value = "user/byRole/{roles}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<List<AitUserVO>> getUsersByRole(@PathVariable String[] roles) {
+		return buildResponse(userSrv.getByRoles(roles));
+	}
+
+	@RequestMapping(value = "user/all", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<List<AitUserVO>> getAllUsers() {
+		return buildResponse(userSrv.getAll());
 	}
 }

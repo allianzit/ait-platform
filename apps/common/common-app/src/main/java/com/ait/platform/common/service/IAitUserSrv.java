@@ -32,6 +32,8 @@ public interface IAitUserSrv extends IAitSrv {
 
 	AitUserVO getByUsername(String username);
 
-	List<AitUserVO> getByRole(String role);
+	List<AitUserVO> getByRoles(String[] roles);
+
+	List<AitUserVO> getAll();
 
 }
