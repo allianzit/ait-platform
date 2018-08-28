@@ -1,86 +1,148 @@
 html {
-	height: 100%;
+  height: 100%;
 }
 
 body {
-	display: flex;
-	flex-direction: row;
-	margin: 0;
-	height: 100%;
-	font-size: 0.9em;
-	overflow-x: hidden;
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  height: 100%;
+  font-size: 1rem;
+  overflow-x: hidden;
 }
 
 app-home {
-	width: 100%;
+  width: 100%;
 }
 
-.route-content {
-	
-}
-
-.route-content .mat-card {
-	padding: 10px;
+.pb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .v-divider {
-	border-left: solid #fff 0.5px;
-	padding-left: 4px;
-	margin-left: 6px;
+  border-right: solid currentColor 0.5px;
+  padding-right: 8px;
+  margin-right: 4px;
 }
 
 .ait-buttons {
-	padding: 8px 0;
+  padding: 8px 8px;
 }
 
-.ait-buttons .mat-button, .ait-buttons .mat-fab, .ait-buttons .mat-icon-button,
-	.ait-buttons .mat-mini-fab, .ait-buttons .mat-raised-button {
-	margin-left: 8px;
-}
+  .ait-buttons .mat-button, .ait-buttons .mat-fab, .ait-buttons .mat-icon-button,
+  .ait-buttons .mat-mini-fab, .ait-buttons .mat-raised-button {
+    margin-left: 8px;
+    border: solid 0.5px currentColor !important;
+    min-width: 40px;
+  }
 
 .ait-table {
-	border: solid #ccc 0.5px;
+  border: solid #ccc 0.5px;
 }
 
 .ait-file-label {
-	display: block;
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
+  cursor: pointer;
+  display: block;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
 }
 
 .ait-file-input {
-	opacity: 0;
-	position: absolute;
-	z-index: -1;
-}
-
-.currency {
-	text-align: right !important;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
 }
 
 .currency:before {
-	content: '$ ';
+  content: '$ ';
+}
+
+.percent {
 }
 
 .tricky-select {
-	width: 100%;
+  width: 100%;
 }
 
-.tricky-select .mat-input-underline {
-	display: none;
-}
+  .tricky-select .mat-input-underline {
+    display: none;
+  }
 
 .breadcrumb {
-	margin: 0;
+  margin: 0;
 }
 
 li.breadcrumb.list {
-	margin: 0;
-	display: inline-block;
+  margin: 0;
+  display: inline-block;
 }
 
-li.breadcrumb.list a {
-	text-decoration: none;
-	cursor: pointer;
+  li.breadcrumb.list a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+/* ESTILOS DEL MINCIT*/
+#entity {
 }
+
+  #entity .mat-list-item-content {
+    padding: 0;
+  }
+
+.ait-toolbar {
+  color: white !important;
+}
+
+.ait-toolbar-title {
+  height: 48px !important;
+}
+
+.mat-card {
+  margin: 0px !important;
+  padding: 0 8px !important;
+  border-radius: 0px !important;
+}
+
+  .mat-card:not([class*="mat-elevation-z"]) {
+    box-shadow: none !important;
+  }
+
+.route-content {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+
+.ait-loader .mat-dialog-container {
+  box-shadow: none;
+  overflow: hidden;
+  background: white;
+  color: black;
+}
+
+
+.mat-drawer-content {
+  overflow: visible !important;
+}
+
+.mat-sort-header-button {
+  padding-left: 8px !important;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+
+ngx-charts-number-card .cell .trimmed-label {
+  text-align: center;
+}
+
+  ngx-charts-number-card .cell .trimmed-label p {
+    white-space: normal !important;
+    text-align: center;
+    font-size: 11px !important;
+  }

@@ -1,0 +1,60 @@
+<div class="ait-content">
+  <div class="ait-logo" fxHide="true" fxShow.gt-sm="true" fxLayout="row" fxLayoutAlign="center">
+    <div fxFlex fxLayout="row">
+      <img alt="logo" *ngIf="environment.logoLeft" src="assets/img/logo_left.png">
+      <div fxFlex><h1 fxLayoutAlign="center" *ngIf="environment.titlePage">{{environment.systemTitle}}</h1></div>
+      <img alt="logo" *ngIf="environment.logoRight" src="assets/img/logo_right.png">
+    </div>
+  </div>
+  <mat-toolbar color="primary" class="ait-toolbar">
+<!--     <ait-hover-wrapper [show]="showHelp" [tittle]="'Inicio'" [bodyContent]="'Aca se abre el menu de opciones'"> -->
+      <button mat-icon-button (click)="sidenav.toggle()" *ngIf="user.menu && user.menu.length>0" matTooltip="Men&uacute; de opciones">
+        <mat-icon>menu</mat-icon>
+      </button>
+<!--     </ait-hover-wrapper> -->
+    <span style="font-size: 1rem;">{{environment.systemTitle}}</span>
+    <span fxFlex></span>
+    <span fxHide fxShow.gt-sm *ngIf="user.username" style="font-size: 1rem;">{{user.firstName}} {{user.lastName}}</span>
+    <a mat-icon-button href="{{environment.apiPath}}login" *ngIf="!user.username"><mat-icon>security</mat-icon></a>
+<!--     <button mat-icon-button (click)="showHelp=!showHelp" matTooltip="Ayuda"><mat-icon>help</mat-icon></button> -->
+    <button mat-icon-button (click)="logout()" *ngIf="user.username" matTooltip="Cerrar sesi&oacute;n"><mat-icon>exit_to_app</mat-icon></button>
+  </mat-toolbar>
+
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="{{getSidenavMode()}}" class="app-sidenav">
+      <app-ait-menu-list [menu]="user.menu" fxLayout="column" [sideNav]="sidenav"></app-ait-menu-list>
+    </mat-sidenav>
+    <div class="route-content">
+      <mat-card color="primary" fxFlex>
+        <mat-card-content *ngIf="router.url=='/'" style="padding: 30px">
+<!--           <mat-card-title>R&eacute;gimen de Transformaci&oacute;n y Ensamble: RTE</mat-card-title> -->
+          <div *ngIf="!user.username">
+            <p>Por medio del siguiente bot&oacute;n podr&aacute; identificarse ante el sistema y comenzar a trabajar.</p>
+            <a mat-raised-button color="primary" href="{{environment.apiPath}}login"><span class="v-divider">Ingresar</span><mat-icon >security</mat-icon></a>
+          </div>
+          <div *ngIf="user.username">
+            <mat-card-subtitle><b>Bienvenido {{user.firstName}} {{user.lastName}}</b></mat-card-subtitle>
+            <p class="mat-subheading-2">Recuerda:</p>
+            <ait-tip>Puedes acceder al men&uacute; de opciones por medio del &iacute;cono (<mat-icon>menu</mat-icon>) situado al lado izquierdo de la barra superior.</ait-tip>
+            <ait-tip>Nunca olvides finalizar tu sesi&oacute;n antes de cerrar &eacute;sta p&aacute;gina. Para ello puedes usar el &iacute;cono (<mat-icon>exit_to_app</mat-icon>) situado al lado derecho de la barra superior.</ait-tip>
+<!--             <ait-hover-wrapper [show]="showHelp" [tittle]="'test'" [bodyContent]="'test de contenido'"> -->
+<!--               <div>aca va la carreta</div> -->
+<!--             </ait-hover-wrapper> -->
+          </div>
+        </mat-card-content>
+        <router-outlet></router-outlet>
+      </mat-card>
+    </div>
+  </mat-sidenav-container>
+  <div fxHide="true" fxShow.gt-sm="true">
+    <div class="ait-footer" fxLayout="column" fxlayoutAlign="center">
+      <div fxLayout="row" fxLayoutAlign="center">Se recomienda usar las versiones m&aacute;s recientes de</div>
+      <div fxLayout="row" fxLayoutAlign="center" fxLayoutWrap="wrap">
+        <button mat-button [disabled]="true"><img src="assets/img/browsers/chrome.png">&nbsp;Google Chrome</button>
+        <button mat-button [disabled]="true"><img src="assets/img/browsers/firefox.png">&nbsp;Mozilla Firefox</button>
+        <button mat-button [disabled]="true"><img src="assets/img/browsers/safari.png">&nbsp;Safari&nbsp;</button>
+        <button mat-button [disabled]="true"><img src="assets/img/browsers/edge.png">&nbsp;Microsoft Edge</button>
+      </div>
+    </div>
+  </div>
+</div>

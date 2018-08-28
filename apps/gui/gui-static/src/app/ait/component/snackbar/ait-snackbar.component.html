@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px" class="ait-snackbar-{{data.msgType}}">
+  <mat-icon style="font-size:48px;width:48px;height:48px; color:red" *ngIf="data.msgType=='error'">error</mat-icon>
+  <mat-icon style="font-size:48px;width:48px;height:48px; color:darkorange" *ngIf="data.msgType=='warning'">warning</mat-icon>
+  <mat-icon style="font-size:48px;width:48px;height:48px; color:green" *ngIf="data.msgType=='confirm'">help</mat-icon>
+  <mat-icon style="font-size:48px;width:48px;height:48px; color:dodgerblue" *ngIf="!data.msgType ||data.msgType=='info'">info</mat-icon>
+  <div *ngIf="data.html" [innerHTML]="data.message"></div>
+  <div *ngIf="!data.html">{{data.message}}</div>
+  <div class="ait-buttons">
+    <button mat-button (click)="close()">Cerrar</button>
+  </div>
+</div>

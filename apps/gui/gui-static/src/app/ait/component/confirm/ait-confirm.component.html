@@ -1,0 +1,18 @@
+<div class="ait-dialog ait-dialog-{{dialogConfig.dialogType}}">
+  <mat-toolbar class="tittle-toolbar">
+    <mat-icon style="color:red" *ngIf="dialogConfig.dialogType=='error'">error</mat-icon>
+    <mat-icon style="color:darkorange" *ngIf="dialogConfig.dialogType=='warning'">warning</mat-icon>
+    <mat-icon style="color:dodgerblue" *ngIf="dialogConfig.dialogType=='info'">info</mat-icon>
+    <mat-icon style="color:green" *ngIf="dialogConfig.dialogType=='confirm'">help</mat-icon>
+    <span [ngStyle]="{'color': getColor()}">&nbsp;&nbsp;&nbsp;{{dialogConfig.title}}</span>
+  </mat-toolbar>
+  <mat-dialog-content fxLayout="row" fxLayoutAlign="start" fxLayoutGap="8px">
+    <div *ngIf="dialogConfig.html" [innerHTML]="dialogConfig.message"></div>
+    <div *ngIf="!dialogConfig.html">{{dialogConfig.message}}</div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" class="ait-buttons">
+    <button mat-button mat-dialog-close color="warn" *ngIf="dialogConfig.dialogType=='confirm'">Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" color="primary">Aceptar</button>
+  </mat-dialog-actions>
+</div>

@@ -1,29 +1,24 @@
 {
 	"/api" :{
-		"target": {
-			"host": "localhost",
-			"protocol": "https:",
-			"port": 8081
-		},
-		"pathRewrite": {
-            "^/api/" : "/" 
-        },
+		"target": "https://rte.vuce.gov.co",
 		"changeOrigin": false,
 		"secure" : false
 	},
 
 	"/auth" :{
-		"target": "https://localhost:8443",
+		"target": "https://rte.vuce.gov.co",
+		"changeOrigin": false,
+		"secure": false,
+		"logLevel": "debug"
+	},
+	"/ws-ait" :{
+		"target": "https://rte.vuce.gov.co",
 		"changeOrigin": false,
 		"secure": false,
 		"logLevel": "debug"
 	},
 	"/login" :{
-		"target": {
-			"host": "localhost",
-			"protocol": "https:",
-			"port": 8081
-		},
+		"target": "https://rte.vuce.gov.co/api/login", 
 		"changeOrigin": false,
 		"secure" : false
 	}

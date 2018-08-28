@@ -1,0 +1,81 @@
+<style>
+  .mat-row {
+    background: white;
+  }
+
+  .mat-column-enabled, .mat-column-entityType, .mat-column-entityStatus, .mat-column-opc {
+    max-width: 45px;
+  }
+
+  .element-row {
+    position: relative;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+    .element-row:hover {
+      background: #f5f5f5;
+    }
+
+    .element-row.expanded {
+      border-bottom-width: 0px;
+      background: #eee;
+    }
+
+  mat-form-field {
+    padding: 8px;
+  }
+</style>
+<div fxLayout="column" *ngIf="!newUser">
+  <div fxLayout="row" style="padding: 0 8px;background: white;z-index:2">
+    <p fxFlex style="color:green;font-size:1.4rem;">Usuarios del sistema</p>
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <mat-form-field>
+        <input matInput placeholder="Filtrar resultados" (keyup)="applyFilter()" [(ngModel)]="filter">
+        <button *ngIf="filter" matSuffix mat-icon-button aria-label="Limpiar" (click)="clearFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <div class="ait-buttons"><button mat-button color="primary" matTooltip="Nuevo usuario" (click)="toNewUser()"><span fxHide fxShow.gt-sm class="v-divider">Nuevo Usuario</span><mat-icon>add</mat-icon></button></div>
+    </div>
+  </div>
+  <mat-table #entityTable [dataSource]="dataSource" fxFlex="100" multiTemplateDataRows matSort>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns; let idx = index;" matRipple class="element-row" [class.expanded]="expandedElement == row" (click)="editUser(row)"></mat-row>
+    <mat-row *matRowDef="let row; columns: ['expandedDetail']" style="background:#eee;min-height:0;border-bottom-width: 0px;" [style.height]="expandedElement == row?'auto':'0'"></mat-row>
+
+    <ng-container matColumnDef="username">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> USUARIO</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-icon matTooltip="{{row.enabled?'Usuario activo':'Usuario inactivo'}}" [matTooltipPosition]="'after'" color="{{row.enabled?'primary':'warn'}}">{{row.enabled?'sentiment_very_satisfied':'sentiment_very_dissatisfied'}}</mat-icon>
+        <span>&nbsp;&nbsp;&nbsp;{{row.username}}</span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="firstName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE </mat-header-cell>
+      <mat-cell *matCellDef="let row"><span>{{row.firstName}}</span></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="lastName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> OTROS NOMBRES </mat-header-cell>
+      <mat-cell *matCellDef="let row"><span>{{row.lastName}}</span></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> EMAIL </mat-header-cell>
+      <mat-cell *matCellDef="let row"><span>{{row.email}}</span></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="expandedDetail">
+      <mat-cell *matCellDef="let detail">
+        <div style=" overflow: hidden; display: flex;" fxFlex="100">
+          <ait-user-detail [@detailExpand]="getExpandedStatus(detail)" fxFlex="100" [user]="detail.data" (onSave)="save(detail.data)" (onCancel)="cancel(detail.data)"></ait-user-detail>
+        </div>
+      </mat-cell>
+    </ng-container>
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]"></mat-paginator>
+</div>
+<div *ngIf="newUser" fxLayout="column">
+  <div fxLayout="row" style="padding: 0 8px;background: white;">
+    <p fxFlex style="color:green;font-size:1.4rem;">Nuevo Usuario</p>
+  </div>
+  <ait-user-detail fxFlex="100" [user]="newUser" (onSave)="save(newUser)" (onCancel)="cancel(newUser)"></ait-user-detail>
+</div>

@@ -1,0 +1,23 @@
+.tittle-toolbar {
+  background: white;
+}
+
+.ait-dialog {
+  padding: 8px;
+}
+
+.ait-dialog-error {
+  border-left: solid 8px red;
+}
+
+.ait-dialog-warning {
+  border-left: solid 8px darkorange;
+}
+
+.ait-dialog-info {
+  border-left: solid 8px dodgerblue;
+}
+
+.ait-dialog-confirm {
+  border-left: solid 8px green;
+}

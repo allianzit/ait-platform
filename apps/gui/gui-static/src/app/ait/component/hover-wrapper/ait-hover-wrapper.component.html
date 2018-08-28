@@ -1,0 +1,13 @@
+<div>
+  <div class="ait-hover-wrapper" [ngStyle]="{'border': border, 'cursor': show?'pointer':'default'}" (mouseenter)="changeStyle($event)" (mouseleave)="changeStyle($event)">
+    <div [popper]="helpContent" [popperTrigger]="'hover'" [popperDisabled]="!show">
+      <div *ngIf="show" class="pulsatingCircle" (mouseenter)="showHelp=true" (mouseleave)="showHelp=false"></div>
+      <ng-content></ng-content>
+    </div>
+    <popper-content #helpContent>
+      <span class="bold">{{tittle}}</span>
+      <br />
+      <span class="thin">{{bodyContent}}</span>
+    </popper-content>
+  </div>
+</div>

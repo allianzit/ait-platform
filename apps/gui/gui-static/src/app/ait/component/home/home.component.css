@@ -1,0 +1,61 @@
+.ait-logo {
+}
+
+  .ait-logo img {
+    max-height: 100px;
+    max-width: 100%;
+  }
+
+  .ait-logo mat-card {
+    padding: 0;
+    box-shadow: none;
+    padding: 0 20px;
+  }
+
+.ait-toolbar {
+  position: sticky;
+  z-index: 99;
+  top: 0;
+}
+
+.ait-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+mat-sidenav {
+  background: rgba(248, 248, 248, 0.9);
+}
+
+.mat-sidenav-container {
+  background-color: #fff;
+  margin-bottom: 60px;
+  min-height: 335px;
+}
+
+.route-content {
+  padding: 4px;
+}
+
+  .route-content mat-card {
+    margin: 4px;
+  }
+
+.ait-footer {
+  font-size: 14px;
+  color: white;
+  background: #424242;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  z-index: 999;
+}
+
+  .ait-footer .mat-button[disabled] {
+    color: #aaa;
+  }
+
+  .ait-footer button img {
+    height: 24px;
+  }

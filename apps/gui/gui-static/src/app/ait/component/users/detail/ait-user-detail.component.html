@@ -1,0 +1,58 @@
+<style>
+  mat-form-field {
+    padding: 8px;
+  }
+
+  .mat-column-opc {
+    max-width: 40px;
+  }
+</style>
+<div fxFlex="100">
+  <div class="userForm mat-elevation-z1" style="background: white;margin:4px;">
+    <form #userForm="ngForm">
+      <div fxFlex="100" style="padding: 16px 8px;">
+        <div fxLayout="row wrap">
+          <div fxFlex="50" fxFlex.xs="100" fxLayout="row" fxLayoutAlign="start center" style="padding: 8px;">
+            <mat-checkbox [(ngModel)]="user.enabled" name="enabled">Usuario Activo?</mat-checkbox>
+            <mat-icon matTooltip="{{user.enabled}}" [matTooltipPosition]="'after'" color="{{user.enabled?'primary':'warn'}}">{{user.enabled?'sentiment_very_satisfied':'sentiment_very_dissatisfied'}}</mat-icon>
+          </div>
+          <div fxFlex="50" fxFlex.xs="100" fxLayout="row" fxLayoutAlign="start center" style="padding: 8px;" *ngIf="user.id==null">
+            <mat-checkbox [(ngModel)]="updateKeycloakIfExist" name="updateKeycloakIfExist">Actualizar usuario de Keycloak si ya existe?</mat-checkbox>
+          </div>
+          <mat-form-field fxFlex="50" fxFlex.xs="100">
+            <input matInput placeholder="Nombre de usuario" name="username" [(ngModel)]="user.username" required maxlength="15" autocomplete="off" [disabled]="user.id!=null">
+            <mat-hint align="start"><strong>Nombre de usuario. Debe ser &uacute;nico</strong> </mat-hint>
+            <mat-hint align="end">{{user.username.length}} / 15</mat-hint>
+          </mat-form-field>
+          <mat-form-field fxFlex="50" fxFlex.xs="100">
+            <input matInput placeholder="Primer Nombre" name="firstName" [ngModel]="user.firstName | uppercase" (ngModelChange)="user.firstName=$event" required maxlength="128" autocomplete="firstName">
+            <mat-hint align="start"><strong>Primer nombre</strong> </mat-hint>
+            <mat-hint align="end">{{user.firstName.length}} / 128</mat-hint>
+          </mat-form-field>
+          <mat-form-field fxFlex="50" fxFlex.xs="100">
+            <input matInput placeholder="Otros Nombres" name="lastName" [ngModel]="user.lastName | uppercase" (ngModelChange)="user.lastName=$event" required maxlength="128" autocomplete="lastName">
+            <mat-hint align="start"><strong>Otros nombres o apellidos</strong> </mat-hint>
+            <mat-hint align="end">{{user.lastName && user.lastName.length}} / 128</mat-hint>
+          </mat-form-field>
+          <mat-form-field fxFlex="50" fxFlex.xs="100">
+            <input matInput placeholder="Email" name="email" [(ngModel)]="user.email" required autocomplete="email" email>
+            <mat-hint align="start"><strong>Email de contacto del usuario</strong> </mat-hint>
+            <mat-hint align="end" *ngIf="userForm.controls.email && userForm.controls.email.invalid" color="warn">Ingrese un email valido</mat-hint>
+          </mat-form-field>
+          <mat-form-field fxFlex="50" fxFlex.xs="100">
+            <mat-select placeholder="Roles" [(ngModel)]="newRoles" name="role" [compareWith]="compareRoles" multiple>
+              <mat-option *ngFor="let role of roles" [value]="role">{{role.description}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <!-- 	OPCIONES -->
+      <div fxFlex="auto" fxLayout="row" fxLayoutAlign="end" class="ait-buttons">
+        <button mat-button color="accent" (click)="cancel(userForm)"><span *ngIf="!mobile" class="v-divider">{{user.id?'Cancelar':'Volver'}}</span><mat-icon>{{user.id?'cancel':'undo'}}</mat-icon></button>
+        <button mat-button color="primary" (click)="save(userForm)" [disabled]="!userForm.valid"><span *ngIf="!mobile" class="v-divider">Guardar</span><mat-icon>done</mat-icon></button>
+      </div>
+    </form>
+  </div>
+</div>
