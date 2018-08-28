@@ -60,7 +60,7 @@ public class AitSecureCommonApi extends AitApiBase {
 	@Autowired
 	private IAitParamSrv paramSrv;
 
-	@Autowired
+	@Autowired 
 	private IAitUserSrv userSrv;
 
 	@Autowired

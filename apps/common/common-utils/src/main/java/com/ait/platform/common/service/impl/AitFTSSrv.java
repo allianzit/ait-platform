@@ -15,16 +15,8 @@
  */
 package com.ait.platform.common.service.impl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ait.platform.common.logger.AitLogger;
 import com.ait.platform.common.service.IAitFTSSrv;
 
 /**
@@ -34,21 +26,21 @@ import com.ait.platform.common.service.IAitFTSSrv;
 @Service
 public class AitFTSSrv implements IAitFTSSrv {
 
-	private static final Logger logger = LoggerFactory.getLogger(AitFTSSrv.class);
+	// private static final Logger logger = LoggerFactory.getLogger(AitFTSSrv.class);
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	@Override
-	public void buildIndexes() {
-		try {
-			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-			fullTextEntityManager.createIndexer().startAndWait();
-		} catch (InterruptedException e) {
-			//System.out.println("Error creando la lista de indices: " + e.toString());
-			AitLogger.debug(logger,"Error creando la lista de indices: " + e.toString());
-		}
-
-	}
+	// @PersistenceContext
+	// private EntityManager entityManager;
+	//
+	// @Override
+	// public void buildIndexes() {
+	// try {
+	// FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+	// fullTextEntityManager.createIndexer().startAndWait();
+	// } catch (InterruptedException e) {
+	// //System.out.println("Error creando la lista de indices: " + e.toString());
+	// AitLogger.debug(logger,"Error creando la lista de indices: " + e.toString());
+	// }
+	//
+	// }
 
 }

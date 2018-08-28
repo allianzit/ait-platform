@@ -21,5 +21,5 @@ package com.ait.platform.common.service;
  */
 public interface IAitFTSSrv {
 
-	void buildIndexes();
+	// void buildIndexes();
 }

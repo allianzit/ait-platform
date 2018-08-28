@@ -15,16 +15,14 @@
  */
 package com.ait.platform.common.repository;
 
-import org.hibernate.search.jpa.FullTextQuery;
-
 /**
  * @author AllianzIT
  *
  */
 public interface IAitFTSRepo {
 
-	FullTextQuery getFTSQuery(String filterText, final Class<?> entityType, Integer maxResults, String... fields);
-
-	public FullTextQuery getFTSWildcardQuery(String filterText, final Class<?> entityType, Integer maxResults, String field);
+//	FullTextQuery getFTSQuery(String filterText, final Class<?> entityType, Integer maxResults, String... fields);
+//
+//	public FullTextQuery getFTSWildcardQuery(String filterText, final Class<?> entityType, Integer maxResults, String field);
 
 }
