@@ -30,7 +30,7 @@ public interface IAitCommonRetriever {
 
 	AitUserVO saveUser(AitUserVO user) ;
 	
-	List<AitListOptionVO> findByListTypeAndFilter(final String type, final String filter);
+	List<AitListOptionVO> findByListTypeAndFilter(final String type, final String filter, Integer maxResults);
 
 	AitParamVO getAitParamByName(final String name);
 

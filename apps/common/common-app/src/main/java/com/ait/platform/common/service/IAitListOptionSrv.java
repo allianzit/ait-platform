@@ -24,6 +24,6 @@ import com.ait.platform.common.model.vo.AitListOptionVO;
  */
 public interface IAitListOptionSrv {
 
-	List<AitListOptionVO> findByListTypeAndFilter(final String listType, String filter);
+	List<AitListOptionVO> findByListTypeAndFilter(final String listType, String filter, Integer maxResults);
 
 }

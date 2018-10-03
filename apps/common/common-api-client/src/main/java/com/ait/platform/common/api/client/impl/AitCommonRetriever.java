@@ -42,7 +42,7 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	private static final Logger logger = LoggerFactory.getLogger(AitCommonRetriever.class);
 	@Autowired
 	private IAitCommonClient client;
-	
+
 	@Override
 	@HystrixCommand(fallbackMethod = "errorOnSaveUser", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
 	public AitUserVO saveUser(AitUserVO user) {
@@ -81,13 +81,13 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 
 	@Override
 	@HystrixCommand(fallbackMethod = "errorOnFindByListTypeAndFilter", commandProperties = { @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE") })
-	public List<AitListOptionVO> findByListTypeAndFilter(String type, String filter) {
+	public List<AitListOptionVO> findByListTypeAndFilter(String type, String filter, Integer maxResults) {
 		AitLogger.debug(logger, "Searching listOptions by type: {} and filter: '{}'", type, filter);
 		try {
-			return client.findByListTypeAndFilter(type, filter).getBody();
+			return client.findByListTypeAndFilter(type, filter, maxResults).getBody();
 		} catch (final Exception e) {
 			e.printStackTrace();
-			return errorOnFindByListTypeAndFilter(type, filter);
+			return errorOnFindByListTypeAndFilter(type, filter, maxResults);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 	}
 
 	/********************** On feign invocation error **************************/
-	
+
 	public AitUserVO errorOnSaveUser(AitUserVO user) {
 		AitLogger.debug(logger, "Error trying to save user: {} ", user);
 		return user;
@@ -132,8 +132,8 @@ public class AitCommonRetriever implements IAitCommonRetriever {
 		return new AitUserVO();
 	}
 
-	public List<AitListOptionVO> errorOnFindByListTypeAndFilter(String type, String filter) {
-		AitLogger.debug(logger, "Error trying to get option list of type: {} with filter: '{}'", type, filter);
+	public List<AitListOptionVO> errorOnFindByListTypeAndFilter(String type, String filter, Integer maxResults) {
+		AitLogger.debug(logger, "Error trying to get option list of type: {} with filter: '{}' and maxResults: {}", type, filter, maxResults);
 		return new ArrayList<AitListOptionVO>();
 	}
 

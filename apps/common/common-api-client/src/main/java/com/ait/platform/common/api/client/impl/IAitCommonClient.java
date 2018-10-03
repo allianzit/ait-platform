@@ -41,7 +41,7 @@ interface IAitCommonClient {
 
 	@RequestMapping(value = "/public/listOption/filter/{type}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	ResponseEntity<List<AitListOptionVO>> findByListTypeAndFilter(@PathVariable("type") final String type, @RequestParam("filter") final String filter);
+	ResponseEntity<List<AitListOptionVO>> findByListTypeAndFilter(@PathVariable("type") final String type, @RequestParam("filter") final String filter, @RequestParam(name = "maxResults", required = false, defaultValue = "10") Integer maxResults);
 
 	@RequestMapping(value = "/internal/param/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody

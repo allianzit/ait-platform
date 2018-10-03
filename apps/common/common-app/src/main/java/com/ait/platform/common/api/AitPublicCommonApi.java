@@ -38,14 +38,14 @@ import com.ait.platform.common.util.AitApiBase;
 @RequestMapping(value = "/public/")
 public class AitPublicCommonApi extends AitApiBase {
 
-//	private static final Logger LOGGER = LoggerFactory.getLogger(AitPublicCommonApi.class);
+	// private static final Logger LOGGER = LoggerFactory.getLogger(AitPublicCommonApi.class);
 
 	@Autowired
 	private IAitListOptionSrv listOptionSrv;
 
 	@RequestMapping(value = "listOption/filter/{type}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<AitListOptionVO>> findByListTypeAndFilter(@PathVariable String type, @RequestParam String filter) {
-		return buildResponse(listOptionSrv.findByListTypeAndFilter(type, filter.toUpperCase()));
+	public ResponseEntity<List<AitListOptionVO>> findByListTypeAndFilter(@PathVariable String type, @RequestParam String filter, @RequestParam(required = false, defaultValue = "10") Integer maxResults) {
+		return buildResponse(listOptionSrv.findByListTypeAndFilter(type, filter.toUpperCase(), maxResults));
 	}
 }

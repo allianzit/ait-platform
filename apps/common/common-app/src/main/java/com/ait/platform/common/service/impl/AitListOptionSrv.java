@@ -42,9 +42,8 @@ public class AitListOptionSrv extends AitSrv implements IAitListOptionSrv {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<AitListOptionVO> findByListTypeAndFilter(String listType, String filter) {
-		// return listOptionRepo.findByListTypeAndFilter(listType, "%" + filter + "%", new PageRequest(0, 10)).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
-		return listOptionRepo.findByListTypeAndFilter(listType, filter + "%", new PageRequest(0, 10)).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
+	public List<AitListOptionVO> findByListTypeAndFilter(String listType, String filter, Integer maxResults) {
+		return listOptionRepo.findByListTypeAndFilter(listType, filter + "%", new PageRequest(0, maxResults)).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
 	}
 
 }
