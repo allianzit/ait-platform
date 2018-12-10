@@ -56,8 +56,8 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "id" }, callSuper = false)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@AuditTable(value = IAitEntity.TASK_EMAIL_ATTACHED + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
+//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+//@AuditTable(value = IAitEntity.TASK_EMAIL_ATTACHED + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
 public class AitTaskEmailAttached implements Serializable {
 
 	private static final long serialVersionUID = -5457305810888737243L;

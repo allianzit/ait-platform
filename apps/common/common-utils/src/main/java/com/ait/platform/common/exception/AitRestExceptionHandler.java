@@ -18,7 +18,9 @@ package com.ait.platform.common.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -119,18 +121,19 @@ public class AitRestExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Object>(AitException, new HttpHeaders(), AitException.getStatus());
 	}
 
-	// @ExceptionHandler({ ConstraintViolationException.class })
-	// public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex, final WebRequest request) {
-	// logger.info(ex.getClass().getName());
-	// //
-	// final List<String> errors = new ArrayList<String>();
-	// for (final ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-	// errors.add(violation.getRootBeanClass().getName() + " " + violation.getPropertyPath() + ": " + violation.getMessage());
-	// }
-	//
-	// final AitException AitException = new AitException(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
-	// return new ResponseEntity<Object>(AitException, new HttpHeaders(), AitException.getStatus());
-	// }
+	@ExceptionHandler({ ConstraintViolationException.class })
+	public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex, final WebRequest request) {
+		logger.info(ex.getClass().getName());
+		final AitException AitException = new AitException(HttpStatus.BAD_REQUEST, "Error de integridad referencial", "Verifique que la información relacionada que intenta ingresar sea adecuada");
+		return new ResponseEntity<Object>(AitException, new HttpHeaders(), AitException.getStatus());
+	}
+	
+	@ExceptionHandler({ DataIntegrityViolationException.class })
+	public ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex, final WebRequest request) {
+		logger.info(ex.getClass().getName());
+		final AitException AitException = new AitException(HttpStatus.BAD_REQUEST, "Error de integridad de datos", "Verifique que la información que intenta ingresar no se encuentre repetida");
+		return new ResponseEntity<Object>(AitException, new HttpHeaders(), AitException.getStatus());
+	}
 
 	// 404
 
@@ -166,7 +169,8 @@ public class AitRestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(final HttpMediaTypeNotSupportedException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-		logger.info(ex.getClass().getName());ex.printStackTrace();
+		logger.info(ex.getClass().getName());
+		ex.printStackTrace();
 		//
 		final StringBuilder builder = new StringBuilder();
 		builder.append(ex.getContentType());

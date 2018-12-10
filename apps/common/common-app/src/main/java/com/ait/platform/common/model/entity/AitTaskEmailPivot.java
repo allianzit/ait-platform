@@ -61,8 +61,8 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "id" }, callSuper = false)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@AuditTable(value = IAitEntity.TASK_EMAIL_PIVOT + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
+//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+//@AuditTable(value = IAitEntity.TASK_EMAIL_PIVOT + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
 public class AitTaskEmailPivot extends AitTaskPivot {
 
 	private static final long serialVersionUID = -4934479191950402312L;

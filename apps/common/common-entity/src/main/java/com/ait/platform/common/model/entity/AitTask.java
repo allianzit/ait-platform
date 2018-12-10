@@ -63,8 +63,8 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@AuditTable(value = IAitEntity.TASK + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
+//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+//@AuditTable(value = IAitEntity.TASK + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
 public class AitTask implements Serializable {
 
 	/**
