@@ -20,11 +20,15 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ait.platform.common.exception.AitException;
+import com.ait.platform.common.model.entity.AitListOption;
 import com.ait.platform.common.model.vo.AitListOptionVO;
 import com.ait.platform.common.repository.IAitListOptionRepo;
+import com.ait.platform.common.repository.IAitListTypeRepo;
 import com.ait.platform.common.service.IAitListOptionSrv;
 
 /**
@@ -35,15 +39,37 @@ import com.ait.platform.common.service.IAitListOptionSrv;
 @Transactional
 public class AitListOptionSrv extends AitSrv implements IAitListOptionSrv {
 
-	// private static final Logger logger = LoggerFactory.getLogger(AitListOptionSrv.class);
-
 	@Autowired
 	private IAitListOptionRepo listOptionRepo;
+
+	@Autowired
+	private IAitListTypeRepo listTypeRepo;
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<AitListOptionVO> findByListTypeAndFilter(String listType, String filter, Integer maxResults) {
 		return listOptionRepo.findByListTypeAndFilter(listType, filter + "%", new PageRequest(0, maxResults)).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<AitListOptionVO> findAllByType(String listType) {
+		return listOptionRepo.findByListTypeCode(listType).stream().map(opt -> convertAToB(opt, new AitListOptionVO())).collect(Collectors.toList());
+	}
+
+	@Override
+	public AitListOptionVO save(String typeCode, AitListOption option) {
+		option.setListType(listTypeRepo.findByCode(typeCode));
+		option.setId(null);
+		return convertAToB(listOptionRepo.save(option), new AitListOptionVO());
+	}
+
+	@Override
+	public AitListOptionVO update(String typeCode, AitListOption option) {
+		if (listOptionRepo.exists(option.getId())) {
+			option.setListType(listTypeRepo.findByCode(typeCode));
+			return convertAToB(listOptionRepo.save(option), new AitListOptionVO());
+		}
+		throw new AitException(HttpStatus.BAD_REQUEST, "Opción no encontrada", "No se puede actualizar la opción");
 	}
 
 }

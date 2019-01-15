@@ -15,27 +15,19 @@
  */
 package com.ait.platform.common.repository;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import com.ait.platform.common.model.entity.AitListOption;
+import com.ait.platform.common.model.entity.AitListType;
 
 /**
  * @author AllianzIT
  *
  */
 @RepositoryRestResource(exported = false)
-public interface IAitListOptionRepo extends RevisionRepository<AitListOption, Integer, Integer>, JpaRepository<AitListOption, Integer> {
+public interface IAitListTypeRepo extends RevisionRepository<AitListType, Integer, Integer>, JpaRepository<AitListType, Integer> {
 
-	@Query(value = "SELECT o FROM AitListOption o WHERE o.listType.code=?1 and (upper(o.name) like ?2 or upper(o.internalCode) like ?2 )")
-	List<AitListOption> findByListTypeAndFilter(String typeList, String filter, Pageable pageable);
-
-	Collection<AitListOption> findByListTypeCode(String listType);
+	AitListType findByCode(String code);
 
 }

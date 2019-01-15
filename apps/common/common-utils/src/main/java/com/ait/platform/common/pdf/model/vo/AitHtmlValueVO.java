@@ -31,4 +31,14 @@ public class AitHtmlValueVO {
 		return this.newList(null);
 	}
 
+	public boolean containsKey(String property) {
+		if (values != null) {
+			for (AitHtmlValueVO vo : values) {
+				if (property.equals(vo.getKey())) {
+					return true;
+				}
+			}
+		}
+		return property.equals(key);
+	}
 }

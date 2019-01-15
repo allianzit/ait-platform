@@ -18,6 +18,7 @@ package com.ait.platform.common.util;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +44,7 @@ public class AitStringUtils {
 	private static final String PROPERTY_SEPARATOR = "__";
 
 	// separador que contiene el formato y el valor por defecto para una propiedad. Ej: fecha#yyyy-MM-dd#2018-01-01
-	private static final String FORMAT_SEPARATOR = "#";
+	private static final String FORMAT_SEPARATOR = "->";
 
 	// indica un metodo al cual no se le debe agregar el 'get' inicial. Ej dato__valor_floatValue -> obj.getDato().floatValue()
 	private static final String NO_GET_METHOD = "_";
@@ -128,14 +129,15 @@ public class AitStringUtils {
 
 				// si es un tag de tipo lista (inicio)
 				if (property.startsWith(LIST_INI)) {
+					property = property.substring(LIST_INI.length());
 					// se mueve el indice para omitir las propiedades dentro de la lista
-					int newIdx = template.indexOf(LIST_END + property, idx);
+					int newIdx = template.lastIndexOf(LIST_END + property);
 
 					// se busca el tag de cierre de la lista
 					AitHtmlValueVO rows = values.newList(property);
 
 					// lista
-					Object list = getValue(obj, property.substring(LIST_INI.length() - 1));
+					Object list = getValue(obj, property);
 
 					String subTemplate = template.substring(idx, newIdx);
 
@@ -146,7 +148,7 @@ public class AitStringUtils {
 						}
 					}
 					idx = newIdx;
-				} else {// de lo contrario, se asume que es de tipo propiedad
+				} else if (!values.containsKey(property)) {// de lo contrario, se asume que es de tipo propiedad
 					values.addValue(property, getValue(obj, property).toString());
 				}
 			} catch (Exception e) {
@@ -165,34 +167,43 @@ public class AitStringUtils {
 			content = content.replaceAll(key, Matcher.quoteReplacement(newValue));
 		}
 		// lista de valores
-		else if (values.getKey() != null) {
-			// formato: ::<propiedadTipoLista::
-			String tagEnd = PROPERY_HOLDER + LIST_END + values.getKey();
-
-			// se copia el segmento entre el tag de inicio y de fin. Formato ::</propiedadTipoLista::
-			int begin = content.indexOf(PROPERY_HOLDER + LIST_INI + values.getKey());
-			int end = content.indexOf(tagEnd);
-
-			if (begin > -1 && end > -1) {
-				// contenido a duplicar por cada registro
-				String listString = content.substring(begin, end + tagEnd.length());
-
-				// se quitan los tags que definen cada registro (esos tags no estarán en el HTML final)
-				String subContent = listString.substring(tagEnd.length() - 1, listString.length() - tagEnd.length() - 1);
-
-				StringBuffer listBuffer = new StringBuffer();
-				// se reemplaza el contenido del tag por lo valores de cada registro de la lista
-				for (AitHtmlValueVO value : values.getValues()) {
-					listBuffer.append(replaceContent(subContent, value));
-				}
-				// se reemplaza el contenido en el html principal
-				content = content.replace(listString, listBuffer.toString());
-			}
-		}
-		// registro
 		else {
-			for (AitHtmlValueVO value : values.getValues()) {
-				content = replaceContent(content, value);
+			values.getValues().sort(new Comparator<AitHtmlValueVO>() {
+				@Override
+				public int compare(AitHtmlValueVO m1, AitHtmlValueVO m2) {
+					return m2.getValues().size() - m1.getValues().size();
+				}
+			});
+			if (values.getKey() != null) {
+
+				// formato: ::<propiedadTipoLista::
+				String tagEnd = PROPERY_HOLDER + LIST_END + values.getKey();
+
+				// se copia el segmento entre el tag de inicio y de fin. Formato ::</propiedadTipoLista::
+				int begin = content.indexOf(PROPERY_HOLDER + LIST_INI + values.getKey());
+				int end = content.lastIndexOf(tagEnd);
+
+				if (begin > -1 && end > -1) {
+					// contenido a duplicar por cada registro
+					String listString = content.substring(begin, end + tagEnd.length());
+
+					// se quitan los tags que definen cada registro (esos tags no estarán en el HTML final)
+					String subContent = listString.substring(tagEnd.length() - 1, listString.length() - tagEnd.length() - 1);
+
+					StringBuffer listBuffer = new StringBuffer();
+					// se reemplaza el contenido del tag por lo valores de cada registro de la lista
+					for (AitHtmlValueVO value : values.getValues()) {
+						listBuffer.append(replaceContent(subContent, value));
+					}
+					// se reemplaza el contenido en el html principal
+					content = content.replace(listString, listBuffer.toString());
+				}
+			}
+			// registro
+			else {
+				for (AitHtmlValueVO value : values.getValues()) {
+					content = replaceContent(content, value);
+				}
 			}
 		}
 		return content;

@@ -36,10 +36,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.platform.common.exception.AitException;
+import com.ait.platform.common.model.entity.AitListOption;
+import com.ait.platform.common.model.entity.AitListType;
 import com.ait.platform.common.model.vo.AitEnvironmentVO;
+import com.ait.platform.common.model.vo.AitListOptionVO;
+import com.ait.platform.common.model.vo.AitListTypeVO;
 import com.ait.platform.common.model.vo.AitParamVO;
 import com.ait.platform.common.model.vo.AitUserVO;
 import com.ait.platform.common.service.IAitKeycloakSrv;
+import com.ait.platform.common.service.IAitListOptionSrv;
+import com.ait.platform.common.service.IAitListTypeSrv;
 import com.ait.platform.common.service.IAitParamSrv;
 import com.ait.platform.common.service.IAitUserSrv;
 import com.ait.platform.common.util.AitApiBase;
@@ -65,6 +71,13 @@ public class AitSecureCommonApi extends AitApiBase {
 
 	@Autowired
 	private IAitKeycloakSrv keycloakSrv;
+	
+	@Autowired
+	private IAitListTypeSrv listTypeSrv;
+	
+	@Autowired
+	private IAitListOptionSrv listOptionSrv;
+
 
 	@RequestMapping(value = "me", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -127,5 +140,35 @@ public class AitSecureCommonApi extends AitApiBase {
 	@RequestMapping(value = "user/all", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<AitUserVO>> getAllUsers() {
 		return buildResponse(userSrv.getAll());
+	}
+	
+	@RequestMapping(value = "listType", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<List<AitListTypeVO>> findAllListType() {
+		return buildResponse(listTypeSrv.findAll());
+	}
+	
+	@RequestMapping(value = "listType", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<AitListTypeVO> updateListType(@RequestBody AitListType listType) {
+		return buildResponse(listTypeSrv.update(listType));
+	}
+	
+	@RequestMapping(value = "listOption/{type}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<List<AitListOptionVO>> findAllOptionByType(@PathVariable String type) {
+		return buildResponse(listOptionSrv.findAllByType(type));
+	}
+	
+	@RequestMapping(value = "listOption/{type}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<AitListOptionVO> saveListOption(@PathVariable String type, @RequestBody AitListOption option) {
+		return buildResponse(listOptionSrv.save(type, option));
+	}
+	
+	@RequestMapping(value = "listOption/{type}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<AitListOptionVO> updateListOption(@PathVariable String type, @RequestBody AitListOption option) {
+		return buildResponse(listOptionSrv.update(type, option));
 	}
 }

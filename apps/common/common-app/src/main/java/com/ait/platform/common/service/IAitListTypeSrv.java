@@ -16,21 +16,18 @@
 
 import java.util.List;
 
-import com.ait.platform.common.model.entity.AitListOption;
-import com.ait.platform.common.model.vo.AitListOptionVO;
+import com.ait.platform.common.model.entity.AitListType;
+import com.ait.platform.common.model.vo.AitListTypeVO;
 
 /**
  * @author AllianzIT
  *
  */
-public interface IAitListOptionSrv {
+public interface IAitListTypeSrv {
 
-	List<AitListOptionVO> findByListTypeAndFilter(final String listType, String filter, Integer maxResults);
+	List<AitListTypeVO> findAll();
 
-	List<AitListOptionVO> findAllByType(String type);
+	AitListTypeVO update(AitListType listType);
 
-	AitListOptionVO save(String typeCode, AitListOption option);
-
-	AitListOptionVO update(String typeCode, AitListOption option);
 
 }
