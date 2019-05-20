@@ -32,10 +32,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
-
 import com.ait.platform.common.util.IAitEntity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -63,8 +59,8 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-//@AuditTable(value = IAitEntity.TASK + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
+// @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+// @AuditTable(value = IAitEntity.TASK + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
 public class AitTask implements Serializable {
 
 	/**

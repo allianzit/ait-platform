@@ -16,8 +16,6 @@
 package com.ait.platform.common.util;
 
 import org.hibernate.envers.RevisionListener;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ait.platform.common.model.entity.AitRevisionInfo;
 
@@ -29,15 +27,6 @@ public class AitRevisionListener implements RevisionListener {
 
 	public void newRevision(Object revisionEntity) {
 		final AitRevisionInfo revision = (AitRevisionInfo) revisionEntity;
-		revision.setUserName(getUserName());
+		revision.setUserName(AitUtils.getUserName());
 	}
-
-	private String getUserName() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication != null) {
-			return authentication.getName();
-		}
-		return "ANONYMOUS";
-	}
-
 }

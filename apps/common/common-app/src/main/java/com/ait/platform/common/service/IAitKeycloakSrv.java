@@ -28,6 +28,6 @@ public interface IAitKeycloakSrv {
 
 	void deleteUserById(String userId);
 
-	void resetPwd(String userId);
+	boolean resetPwd(Integer userId);
 
 }

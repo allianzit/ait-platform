@@ -24,7 +24,7 @@ public interface IAitDocumentSrv {
 	 * Retorna la informacion de un documento con base en su uuid
 	 *
 	 * @param subfolder:
-	 *            path de carpeta(s) internas en donde esta el documento El identificador del documento
+	 *            path de carpeta(s) internas en donde esta el documento
 	 * @param uuid
 	 *            El identificador del documento
 	 * @return EL documento junto con informacion basica del mismo
@@ -35,7 +35,7 @@ public interface IAitDocumentSrv {
 	 * Retorna la informacion de un documento con base en su uuid
 	 *
 	 * @param subfolder:
-	 *            path de carpeta(s) internas en donde esta el documento El identificador del documento
+	 *            path de carpeta(s) internas en donde esta el documento
 	 * @param uuid
 	 *            El identificador del documento
 	 * @param thumbnail
@@ -48,7 +48,7 @@ public interface IAitDocumentSrv {
 	 * Retorna una imagen como arreglo de bits para facilitar su pintado en pantalla
 	 *
 	 * @param subfolder:
-	 *            path de carpeta(s) internas en donde esta el documento El identificador del documento
+	 *            path de carpeta(s) internas en donde esta el documento
 	 * @param uuid
 	 *            El identificador de la imagen
 	 * @param thumbnail

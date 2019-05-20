@@ -33,11 +33,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
-
-import com.ait.platform.common.model.entity.AitTaskPivot;
 import com.ait.platform.common.util.IAitEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -61,8 +56,6 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "id" }, callSuper = false)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-//@AuditTable(value = IAitEntity.TASK_EMAIL_PIVOT + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
 public class AitTaskEmailPivot extends AitTaskPivot {
 
 	private static final long serialVersionUID = -4934479191950402312L;

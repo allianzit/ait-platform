@@ -31,7 +31,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.ait.platform.common.constants.IAitConstants;
 import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.file.service.IAitDocumentSrv;
 import com.ait.platform.common.logger.AitLogger;
@@ -76,7 +75,7 @@ public class AitMailSenderSrv implements IAitMailSenderSrv {
 
 			Set<AitTaskEmailAttached> attachemens = mail.getAttachments();
 			for (AitTaskEmailAttached attached : attachemens) {
-				addAttachment(helper, archiveSrv.getDocumentPath(attached.getSubFolder(), attached.getUuid()));
+				addAttachment(helper, attached.getSubFolder(), attached.getUuid());
 			}
 
 			emailSender.send(message);
@@ -91,9 +90,10 @@ public class AitMailSenderSrv implements IAitMailSenderSrv {
 		}
 	}
 
-	private void addAttachment(final MimeMessageHelper helper, final String filePath) throws MessagingException {
+	private void addAttachment(final MimeMessageHelper helper, final String folder, String uuid) throws MessagingException {
+		String filePath = archiveSrv.getDocumentPath(folder, uuid);
 		if (filePath != null) {
-			String fileName = filePath.substring(filePath.lastIndexOf(IAitConstants.SEPARATOR) + 1);
+			String fileName = archiveSrv.getDocumentFile(folder, uuid).getFileName();
 			FileSystemResource file = new FileSystemResource(new File(filePath));
 			helper.addAttachment(fileName, file);
 		} else {

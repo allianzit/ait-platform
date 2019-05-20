@@ -76,7 +76,7 @@ public abstract class AitTaskExcecutorBase implements ApplicationListener<Embedd
 		// se consulta la lista de tareas que se pueden ejecutar en el servidor
 		final Collection<AitTask> tasks = taskSrv.getTasks(serverIp, serverPort);
 
-		AitLogger.info(logger, "Tareas programadas a ejecutar: {}", tasks.size());
+		AitLogger.debug(logger, "Tareas programadas a ejecutar: {}", tasks.size());
 		for (final AitTask task : tasks) {
 			if (canRun(task)) {
 				// se marca la tarea para que no sea tenida en cuenta hasta no terminar su ejecucion actual

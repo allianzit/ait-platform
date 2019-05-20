@@ -18,15 +18,21 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.ait.platform.common.constants.IAitConstants;
 import com.ait.platform.common.exception.AitException;
 import com.ait.platform.common.model.vo.AitUserVO;
+import com.ait.platform.common.service.IAitEmailSrv;
 import com.ait.platform.common.service.IAitKeycloakSrv;
+import com.ait.platform.common.service.IAitUserSrv;
+import com.ait.platform.common.util.AitStringGeneratorUtils;
 
 import lombok.Data;
 
@@ -37,6 +43,12 @@ import lombok.Data;
 @Data
 public class AitKeycloakSrv implements IAitKeycloakSrv {
 	private static final String KK_ID = "sub";
+
+	@Autowired
+	private IAitUserSrv userSrv;
+
+	@Autowired
+	private IAitEmailSrv emailSrv;
 
 	private String serverUrl;
 	private String masterRealm;
@@ -108,7 +120,7 @@ public class AitKeycloakSrv implements IAitKeycloakSrv {
 			UserResource resource = userResource.get(userId);
 			setUserRoles(resource, vo);
 			// se crea el password temporal
-			resetPwd(userId);
+			resetPwd(userId, AitStringGeneratorUtils.nextPassword(6));
 			return userId;
 
 		} else {
@@ -177,12 +189,18 @@ public class AitKeycloakSrv implements IAitKeycloakSrv {
 		userResource.get(userId).remove();
 	}
 
-	public void resetPwd(String userId) {
+	@Async
+	public boolean resetPwd(Integer userId) {
+		AitUserVO user = userSrv.getById(userId);
+		resetPwd(user.getAttributes().get("sub"), AitStringGeneratorUtils.nextPassword(6));
+		return true;
+	}
+
+	private void resetPwd(String userId, String pwd) {
 		// password temporal
 		UserResource resource = userResource.get(userId);
 		UserRepresentation user = resource.toRepresentation();
 		if (user.getEmail() != null) {
-			String pwd = user.getUsername();
 
 			CredentialRepresentation passwordCred = new CredentialRepresentation();
 			passwordCred.setTemporary(true);
@@ -191,10 +209,13 @@ public class AitKeycloakSrv implements IAitKeycloakSrv {
 
 			// Se le asigna el password temporal
 			resource.resetPassword(passwordCred);
+			AitUserVO tmp = new AitUserVO();
+			tmp.setUsername(user.getUsername());
+			tmp.setLastName(user.getLastName());
+			tmp.setEmail(pwd);// hack
+			String subject = "RTE: Clave temporal asignada";
+			emailSrv.sendEmail(subject, IAitConstants.EMAIL_RESET_PWD, tmp, new ArrayList<>(), user.getEmail(), userSrv.getUserVO().getEmail());
 
-			// TODO contemplar el envío de email con el nuevo pwd
-			//
-			//
 		} else {
 			throw new RuntimeException("El email del usuario es requerido para reiniciar la clave de acceso");
 		}

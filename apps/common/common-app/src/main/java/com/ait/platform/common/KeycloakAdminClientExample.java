@@ -1,10 +1,13 @@
 package com.ait.platform.common;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -12,22 +15,26 @@ import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
+import com.ait.platform.common.constants.IAitConstants;
 import com.ait.platform.common.model.vo.AitUserVO;
 
 import net.sf.jsefa.Deserializer;
 import net.sf.jsefa.csv.CsvIOFactory;
 
+@SuppressWarnings("unused")
 public class KeycloakAdminClientExample {
 
 	public static void main(String[] args) throws Exception {
-		String SQL_USER_ATRIBUTE = "Insert into AIT_USER_ATTIBUTE (ID,ATT_KEY,ATT_VALUE,USER_ID) values (%d,'sub','%s',%d);";
 		Keycloak kc = KeycloakBuilder.builder() //
+//				.serverUrl("http://172.18.0.117/auth") //
 //				.serverUrl("https://localhost:8443/auth") //
-				.serverUrl("https://rte.vuce.gov.co/auth") //
+//				 .serverUrl("https://rte.vuce.gov.co/auth") //
+				 .serverUrl("http://ryzen:8180/auth") //
 				.realm("master")//
 				.username("admin") //
 				.password("Mimojal263!.") //
@@ -35,6 +42,36 @@ public class KeycloakAdminClientExample {
 				.resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()) //
 				.build();
 
+		// createUsers(kc);
+		resetPwds(kc);
+
+	}
+
+	private static void resetPwds(Keycloak kc) {
+		UsersResource userResource = kc.realm("ait-platform").users();
+		List<UserRepresentation> users = userResource.search("", 0, 999);
+		for (UserRepresentation user : users) {
+			UserResource resource = userResource.get(user.getId());
+
+			CredentialRepresentation passwordCred = new CredentialRepresentation();
+			passwordCred.setTemporary(false);
+			passwordCred.setType(CredentialRepresentation.PASSWORD);
+			passwordCred.setValue(user.getUsername());
+
+			// Se le asigna el password temporal
+			resource.resetPassword(passwordCred);
+			
+			user.setEmailVerified(true);
+//			user.setEmail("sacosta@mincit.gov.co");
+			user.setEmail("rmcruzv@gmail.com");
+			// se actualiza el email del usuario
+			resource.update(user);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private static void createUsers(Keycloak kc) throws FileNotFoundException, IOException {
+		String SQL_USER_ATRIBUTE = "Insert into AIT_USER_ATTIBUTE (ID,ATT_KEY,ATT_VALUE,USER_ID) values (%d,'sub','%s',%d);";
 		UsersResource userResource = kc.realm("ait-platform").users();
 		BufferedReader reader = new BufferedReader(new FileReader("C:/Users/msi-gs60/Documents/mincit/RTE/USUARIOS-KEYCLOAK.csv"));
 
@@ -96,7 +133,6 @@ public class KeycloakAdminClientExample {
 		scripts.forEach(x -> System.out.println(x));
 		deserializer.close(true);
 		reader.close();
-
 	}
 
 	private static void deleteUser(UsersResource userResource, String username) {

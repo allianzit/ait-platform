@@ -36,4 +36,5 @@ public interface IAitConstants {
 	static final String WILDCARD = "%";
 	static final String ENCODE_INSENSITVE = "'US7ASCII'";
 	static final char SEPARATOR = '/';
+	static final String EMAIL_RESET_PWD = "EMAIL_RESET_PWD";
 }

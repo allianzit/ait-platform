@@ -9,19 +9,20 @@ import lombok.Data;
 public class AitHtmlValueVO {
 	private String key = null;
 	private String value = null;
-	private boolean escapeHTML = true;
+	private boolean escapeHTML = false;
 	private List<AitHtmlValueVO> values = new ArrayList<>();
 
 	public void addValue(String key, String value) {
 		AitHtmlValueVO vo = new AitHtmlValueVO();
 		vo.key = key;
 		vo.value = value;
-		vo.escapeHTML = true;
+		vo.escapeHTML = this.escapeHTML;
 		values.add(vo);
 	}
 
 	public AitHtmlValueVO newList(String tag) {
 		AitHtmlValueVO vo = new AitHtmlValueVO();
+		vo.escapeHTML = this.escapeHTML;
 		vo.key = tag;
 		values.add(vo);
 		return vo;

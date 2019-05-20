@@ -24,8 +24,8 @@ public interface IAitEntity {
 	/**
 	 * Schema name
 	 */
-	public final static String SCHEMA = "C##RTE";
-//	public final static String SCHEMA = "AIT";
+	public final static String SCHEMA = "RTEPRO";
+//	public final static String SCHEMA = "C##RTE";
 
 	/**
 	 * Tables prefix

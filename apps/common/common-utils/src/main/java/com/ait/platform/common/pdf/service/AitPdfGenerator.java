@@ -34,6 +34,8 @@ public class AitPdfGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AitPdfGenerator.class);
 
 	private static final String QUIET_PARAM = "-q";
+	private static final String ENCODING_PARAM = "--encoding";
+	private static final String UTF_8 = "UTF-8";
 	private static final String ORIENTATION_PARAM = "--orientation";
 	private static final String PAGE_SIZE_PARAM = "--page-size";
 	private static final String PAGE_NUMBER_PARAM = "--footer-right";
@@ -67,13 +69,14 @@ public class AitPdfGenerator {
 				}
 			}
 			pdf.addParam(new Param(QUIET_PARAM));
+			pdf.addParam(new Param(ENCODING_PARAM, UTF_8));
 			pdf.addParam(new Param(ORIENTATION_PARAM, properties.getOrientation().getDescr()));
 			pdf.addParam(new Param(PAGE_SIZE_PARAM, properties.getPageSize().getDescr()));
 
 			// margenes por defecto
 			properties.getAdditionalParams().add(new Param("-L", "25mm"));
 			properties.getAdditionalParams().add(new Param("-R", "25mm"));
-//			properties.getAdditionalParams().add(new Param("-B", "40mm"));
+			// properties.getAdditionalParams().add(new Param("-B", "40mm"));
 
 			for (Param param : properties.getAdditionalParams()) {
 				pdf.addParam(param);

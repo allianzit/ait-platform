@@ -27,7 +27,7 @@ spring:
 spring:
   profiles: test,prod
   cloud.config.server.overrides:
-    susi.jpa.generate-export: false
+    ait.jpa.generate-export: false
     spring.jpa:
       generate-ddl: false
       show-sql: false

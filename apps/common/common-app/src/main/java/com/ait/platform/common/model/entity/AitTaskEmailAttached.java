@@ -30,10 +30,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
-
 import com.ait.platform.common.util.IAitEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -50,14 +46,12 @@ import lombok.ToString;
  */
 @Entity
 @Table(name = IAitEntity.TASK_EMAIL_ATTACHED, schema = IAitEntity.SCHEMA)
-@Data 
+@Data
 @NoArgsConstructor
 @ToString(includeFieldNames = true)
 @EqualsAndHashCode(of = { "id" }, callSuper = false)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-//@AuditTable(value = IAitEntity.TASK_EMAIL_ATTACHED + IAitEntity.BACKUP_SUFIX, schema = IAitEntity.SCHEMA)
 public class AitTaskEmailAttached implements Serializable {
 
 	private static final long serialVersionUID = -5457305810888737243L;

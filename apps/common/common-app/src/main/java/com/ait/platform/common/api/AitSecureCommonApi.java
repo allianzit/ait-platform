@@ -66,18 +66,17 @@ public class AitSecureCommonApi extends AitApiBase {
 	@Autowired
 	private IAitParamSrv paramSrv;
 
-	@Autowired 
+	@Autowired
 	private IAitUserSrv userSrv;
 
 	@Autowired
 	private IAitKeycloakSrv keycloakSrv;
-	
+
 	@Autowired
 	private IAitListTypeSrv listTypeSrv;
-	
+
 	@Autowired
 	private IAitListOptionSrv listOptionSrv;
-
 
 	@RequestMapping(value = "me", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -111,6 +110,12 @@ public class AitSecureCommonApi extends AitApiBase {
 
 	}
 
+	@RequestMapping(value = "user/reset/{userId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Boolean> resetUserPwd(@PathVariable Integer userId) {
+		return buildResponse(keycloakSrv.resetPwd(userId));
+	}
+
 	@RequestMapping(value = "portalConfig", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<AitEnvironmentVO> appConfig(HttpServletRequest request) {
 		LOGGER.debug("Getting Keycloak Server Configuration");
@@ -141,31 +146,31 @@ public class AitSecureCommonApi extends AitApiBase {
 	public @ResponseBody ResponseEntity<List<AitUserVO>> getAllUsers() {
 		return buildResponse(userSrv.getAll());
 	}
-	
+
 	@RequestMapping(value = "listType", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<List<AitListTypeVO>> findAllListType() {
 		return buildResponse(listTypeSrv.findAll());
 	}
-	
+
 	@RequestMapping(value = "listType", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<AitListTypeVO> updateListType(@RequestBody AitListType listType) {
 		return buildResponse(listTypeSrv.update(listType));
 	}
-	
+
 	@RequestMapping(value = "listOption/{type}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<List<AitListOptionVO>> findAllOptionByType(@PathVariable String type) {
 		return buildResponse(listOptionSrv.findAllByType(type));
 	}
-	
+
 	@RequestMapping(value = "listOption/{type}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<AitListOptionVO> saveListOption(@PathVariable String type, @RequestBody AitListOption option) {
 		return buildResponse(listOptionSrv.save(type, option));
 	}
-	
+
 	@RequestMapping(value = "listOption/{type}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<AitListOptionVO> updateListOption(@PathVariable String type, @RequestBody AitListOption option) {

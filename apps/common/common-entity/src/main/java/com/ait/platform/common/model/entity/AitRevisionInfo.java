@@ -61,7 +61,7 @@ public class AitRevisionInfo implements Serializable {
 	private int id;
 
 	@Column(name = "REV_DATE")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@RevisionTimestamp
 	@Setter(AccessLevel.NONE)
 	private Date date;
