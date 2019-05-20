@@ -31,13 +31,10 @@ public class KeycloakAdminClientExample {
 
 	public static void main(String[] args) throws Exception {
 		Keycloak kc = KeycloakBuilder.builder() //
-//				.serverUrl("http://172.18.0.117/auth") //
-//				.serverUrl("https://localhost:8443/auth") //
-//				 .serverUrl("https://rte.vuce.gov.co/auth") //
-				 .serverUrl("http://ryzen:8180/auth") //
+				.serverUrl("https://localhost:8443/auth") //
 				.realm("master")//
 				.username("admin") //
-				.password("Mimojal263!.") //
+				.password("pwd") //
 				.clientId("admin-cli") //
 				.resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()) //
 				.build();
