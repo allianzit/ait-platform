@@ -27,11 +27,6 @@ public class AitPrincipalExtractor {
 		return new OAuth2RestTemplate(resource, clientContext);
 	}
 
-	// @Bean
-	// protected OAuth2RestTemplate OAuth2RestTemplate(OAuth2ClientContext context) {
-	// return new OAuth2RestTemplate(resource, context);
-	// }
-
 	@Bean
 	@SuppressWarnings("unchecked")
 	public AuthoritiesExtractor authoritiesExtractor(OAuth2RestOperations template) {

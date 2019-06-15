@@ -16,8 +16,6 @@
 
 import java.util.ArrayList;
 
-import javax.servlet.MultipartConfigElement;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +23,6 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
@@ -119,14 +116,6 @@ public class AitZuulServer extends WebSecurityConfigurerAdapter {
 	public MultipartResolver multipartResolver() {
 		return new StandardServletMultipartResolver();
 	}
-
-//	@Bean
-//	public MultipartConfigElement multipartConfigElement() {
-//		MultipartConfigFactory factory = new MultipartConfigFactory();
-//		factory.setMaxFileSize("10MB");
-//		factory.setMaxRequestSize("10MB");
-//		return factory.createMultipartConfig();
-//	}
 
 	@Bean
 	public WebSocketHttpHeadersCallback webSocketHttpHeadersCallback() {

@@ -36,7 +36,7 @@ public class AitWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 		// initial timeout
-		configurer.setDefaultTimeout(6000);
+		configurer.setDefaultTimeout(12000);
 
 		configurer.registerDeferredResultInterceptors(new DeferredResultProcessingInterceptorAdapter() {
 			@Override

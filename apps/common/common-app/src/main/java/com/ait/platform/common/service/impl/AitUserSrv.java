@@ -168,7 +168,7 @@ public class AitUserSrv extends AitSrv implements IAitUserSrv {
 			}
 		} else {
 			for (GrantedAuthority auth : authorities) {
-				if (opc.getRoles() != null && opc.getRoles().contains(auth.getAuthority())) {
+				if (opc.getRoles() != null && opc.getRoles().contains("," + auth.getAuthority() + ",")) {
 					hasAuthority = true;
 					break;
 				}

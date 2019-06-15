@@ -68,7 +68,6 @@ public class AitOAuth2ConfigBase extends WebSecurityConfigurerAdapter {
 		;
 		http.headers().frameOptions().sameOrigin();
 		http.csrf().ignoringAntMatchers("/ws-ait/**");
-		// .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
 		// se habilita el contexto se seguridad para llamados asincronos
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);

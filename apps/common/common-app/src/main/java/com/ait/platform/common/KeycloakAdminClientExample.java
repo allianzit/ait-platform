@@ -59,8 +59,7 @@ public class KeycloakAdminClientExample {
 			resource.resetPassword(passwordCred);
 			
 			user.setEmailVerified(true);
-//			user.setEmail("sacosta@mincit.gov.co");
-			user.setEmail("rmcruzv@gmail.com");
+			user.setEmail("ads@gmail.com");
 			// se actualiza el email del usuario
 			resource.update(user);
 		}

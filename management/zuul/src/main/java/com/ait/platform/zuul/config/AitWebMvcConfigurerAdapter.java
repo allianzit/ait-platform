@@ -52,16 +52,10 @@ public class AitWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter/* implem
 		});
 	}
 
-	// redirect al contenido estatico (en caso de estar integrado en el servidor)
-	// @Override
-	// public void addViewControllers(ViewControllerRegistry registry) {
-	// registry.addViewController("/").setViewName("forward:/index.html");
-	// }
-
 	@Override
 	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 		// initial timeout
-		configurer.setDefaultTimeout(6000);
+		configurer.setDefaultTimeout(15000);
 
 		configurer.registerDeferredResultInterceptors(new DeferredResultProcessingInterceptorAdapter() {
 			@Override

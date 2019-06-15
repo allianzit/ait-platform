@@ -15,7 +15,6 @@ public class AitWebSocketSecurityConfig extends AbstractSecurityWebSocketMessage
 
 	@Override
 	protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-//		messages.simpDestMatchers("/secured/**").authenticated().anyMessage().authenticated();
 		messages.simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.UNSUBSCRIBE, SimpMessageType.DISCONNECT).permitAll();
 	}
 }

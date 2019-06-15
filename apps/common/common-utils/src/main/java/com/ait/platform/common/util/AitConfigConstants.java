@@ -36,7 +36,7 @@ public class AitConfigConstants {
 	public void init(String _profile) {
 		String[] list = _profile.split(",");
 		profile = list[list.length - 1];
-		development = _profile.indexOf(",dev,") > -1;
+		development = _profile.endsWith(",dev");
 	}
 
 }
