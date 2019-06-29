@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,7 +102,7 @@ public class AitStringUtils {
 				return data.length > 2 ? data[2] : "";
 			}
 			if (value instanceof Date) {
-				SimpleDateFormat sdf = new SimpleDateFormat(data[1]);
+				SimpleDateFormat sdf = new SimpleDateFormat(data[1], new Locale("es","ES"));
 				return sdf.format((Date) value);
 			}
 			if (value instanceof Number) {
