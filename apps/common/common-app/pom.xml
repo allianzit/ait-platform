@@ -43,7 +43,7 @@
 		<maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
 		<slf4j-api.version>1.7.21</slf4j-api.version>
 		<keycloak.admin.version>3.1.0.Final</keycloak.admin.version>
-		<resteasy.version>3.1.4.Final</resteasy.version>
+		<resteasy.version>4.5.7.Final</resteasy.version>
 		<start-class>com.ait.platform.common.AitCommonApplication</start-class>
 	</properties>
 
